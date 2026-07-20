@@ -1,0 +1,887 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "wechat_video",
+    "name": "微信视频号",
+    "icon": "icons/wx_video.png",
+    "description": "微信视频号数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "search_user": {
+      "capability_id": "wechat_video.search_user",
+      "function_id": "search_user",
+      "name": "搜索用户",
+      "description": "根据关键词搜索用户",
+      "icon": "🔍",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "keywords",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入搜索关键词（如：美食博主）",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_channels/fetch_user_search",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "keywords"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.data",
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 60,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信视频号搜索用户",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "username",
+            "label": "用户ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "contact.username",
+            "operator": null
+          },
+          {
+            "key": "nickname",
+            "label": "昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "contact.nickname",
+            "operator": null
+          },
+          {
+            "key": "head_url",
+            "label": "头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "contact.head_url",
+            "operator": null
+          },
+          {
+            "key": "signature",
+            "label": "简介",
+            "type": "text",
+            "field_type": 1,
+            "source": "contact.signature",
+            "operator": null
+          },
+          {
+            "key": "auth_profession",
+            "label": "认证信息",
+            "type": "text",
+            "field_type": 1,
+            "source": "contact.auth_info.auth_profession",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "username",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "user_videos": {
+      "capability_id": "wechat_video.user_videos",
+      "function_id": "user_videos",
+      "name": "用户作品",
+      "description": "采集用户发布的视频",
+      "icon": "📹",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "username",
+            "label": "用户 username",
+            "type": "input",
+            "placeholder": "请输入用户 username（如 v2_060000231003b20f...@finder）",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_channels/fetch_home_page",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "username"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.videos",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "last_buffer",
+          "initial_value": "",
+          "response_path": "data.last_buffer",
+          "has_more_path": "",
+          "response_params": {}
+        },
+        "estimate_per_page": 15,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信视频号用户作品",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "id",
+            "label": "视频ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "short_title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "short_title",
+            "operator": null
+          },
+          {
+            "key": "description",
+            "label": "描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "description",
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "封面链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "cover_url",
+            "operator": null
+          },
+          {
+            "key": "video_url",
+            "label": "视频链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_url",
+            "operator": null
+          },
+          {
+            "key": "duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "duration",
+            "operator": "duration"
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "like_count",
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "comment_count",
+            "operator": null
+          },
+          {
+            "key": "forward_count",
+            "label": "转发数",
+            "type": "number",
+            "field_type": 2,
+            "source": "forward_count",
+            "operator": null
+          },
+          {
+            "key": "fav_count",
+            "label": "收藏数",
+            "type": "number",
+            "field_type": 2,
+            "source": "fav_count",
+            "operator": null
+          },
+          {
+            "key": "createtime",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "createtime",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "ip_region",
+            "label": "IP属地",
+            "type": "text",
+            "field_type": 1,
+            "source": "ip_region",
+            "operator": null
+          },
+          {
+            "key": "author_nickname",
+            "label": "作者昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.nickname",
+            "operator": null
+          },
+          {
+            "key": "author_avatar",
+            "label": "作者头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.avatar",
+            "operator": null
+          },
+          {
+            "key": "author_signature",
+            "label": "作者简介",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.signature",
+            "operator": null
+          },
+          {
+            "key": "author_auth_info",
+            "label": "作者认证",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.auth_info",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "duration",
+        "wechatTime"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "search_video": {
+      "capability_id": "wechat_video.search_video",
+      "function_id": "search_video",
+      "name": "搜索视频（作品）",
+      "description": "根据关键词搜索视频（作品）",
+      "icon": "🎬",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "keywords",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入搜索关键词（如：美食、旅游）",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_channels/fetch_default_search",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "keywords",
+          "with_detail"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.data",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "session_buffer",
+          "initial_value": "",
+          "response_path": "data.last_buffer",
+          "has_more_path": "",
+          "response_params": {}
+        },
+        "estimate_per_page": 30,
+        "allow_collect_all": false,
+        "param_operator": "set_with_detail_true",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信视频号搜索视频（作品）",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "id",
+            "label": "视频ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "export_id",
+            "label": "导出ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "export_id",
+            "operator": "default:"
+          },
+          {
+            "key": "object_id",
+            "label": "作品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "object_id",
+            "operator": "default:"
+          },
+          {
+            "key": "object_nonce_id",
+            "label": "作品NonceID",
+            "type": "text",
+            "field_type": 1,
+            "source": "object_nonce_id",
+            "operator": "default:"
+          },
+          {
+            "key": "doc_id",
+            "label": "文档ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "doc_id",
+            "operator": "default:"
+          },
+          {
+            "key": "hash_doc_id",
+            "label": "Hash文档ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "hash_doc_id",
+            "operator": "default:"
+          },
+          {
+            "key": "feed_nonce_id",
+            "label": "FeedNonceID",
+            "type": "text",
+            "field_type": 1,
+            "source": "feed_nonce_id",
+            "operator": "default:"
+          },
+          {
+            "key": "description",
+            "label": "描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "description",
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "封面链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "cover_url",
+            "operator": null
+          },
+          {
+            "key": "thumb_url",
+            "label": "缩略图链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "thumb_url",
+            "operator": null
+          },
+          {
+            "key": "video_url",
+            "label": "视频链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_url",
+            "operator": null
+          },
+          {
+            "key": "decode_key",
+            "label": "解密密钥",
+            "type": "text",
+            "field_type": 1,
+            "source": "decode_key",
+            "operator": null
+          },
+          {
+            "key": "duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "duration",
+            "operator": "duration"
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "like_count",
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "comment_count",
+            "operator": null
+          },
+          {
+            "key": "forward_count",
+            "label": "转发数",
+            "type": "number",
+            "field_type": 2,
+            "source": "forward_count",
+            "operator": null
+          },
+          {
+            "key": "fav_count",
+            "label": "收藏数",
+            "type": "number",
+            "field_type": 2,
+            "source": "fav_count",
+            "operator": null
+          },
+          {
+            "key": "createtime",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "createtime",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "ip_region",
+            "label": "IP属地",
+            "type": "text",
+            "field_type": 1,
+            "source": "ip_region",
+            "operator": null
+          },
+          {
+            "key": "author_username",
+            "label": "作者ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.username",
+            "operator": null
+          },
+          {
+            "key": "author_nickname",
+            "label": "作者昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.nickname",
+            "operator": null
+          },
+          {
+            "key": "author_head_url",
+            "label": "作者头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.head_url",
+            "operator": null
+          },
+          {
+            "key": "author_signature",
+            "label": "作者简介",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.signature",
+            "operator": null
+          },
+          {
+            "key": "author_auth_profession",
+            "label": "作者认证信息",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.auth_profession",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "duration",
+        "set_with_detail_true",
+        "wechatTime"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "wechat_search": {
+      "capability_id": "wechat_video.wechat_search",
+      "function_id": "wechat_search",
+      "name": "微信搜一搜",
+      "description": "按关键词搜索公众号、文章、视频、新闻等微信内容",
+      "icon": "🔎",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "keyword",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入搜索关键词（如：人民日报）",
+            "required": true
+          },
+          {
+            "key": "business_type",
+            "label": "搜索垂类",
+            "type": "select",
+            "default": "all",
+            "options": [
+              {
+                "label": "全部",
+                "value": "all"
+              },
+              {
+                "label": "公众号",
+                "value": "account"
+              },
+              {
+                "label": "文章",
+                "value": "article"
+              },
+              {
+                "label": "视频",
+                "value": "video"
+              },
+              {
+                "label": "直播",
+                "value": "live_stream"
+              },
+              {
+                "label": "朋友圈",
+                "value": "moments"
+              },
+              {
+                "label": "新闻",
+                "value": "news"
+              },
+              {
+                "label": "读书",
+                "value": "book"
+              },
+              {
+                "label": "听书",
+                "value": "listen"
+              },
+              {
+                "label": "图片",
+                "value": "image"
+              },
+              {
+                "label": "百科",
+                "value": "encyclopedia"
+              },
+              {
+                "label": "微信指数",
+                "value": "weixin_index"
+              }
+            ]
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_search/fetch_search",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "keyword",
+          "business_type",
+          "cursor",
+          "raw"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {
+          "keyword": "keyword"
+        },
+        "response_meta": {
+          "business_type": "data.business_type"
+        },
+        "data_path": "data.items",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "cursor",
+          "initial_value": "",
+          "response_path": "data.cursor",
+          "has_more_path": "data.continue_flag",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": "set_raw_true",
+        "extract_operator": "extract_wechat_search_items"
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信视频号微信搜一搜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "keyword",
+            "label": "搜索词",
+            "type": "text",
+            "field_type": 1,
+            "source": "keyword",
+            "operator": null
+          },
+          {
+            "key": "business_type",
+            "label": "垂类编码",
+            "type": "number",
+            "field_type": 2,
+            "source": "business_type",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题(原始)",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": "default:"
+          },
+          {
+            "key": "title_text",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title_text",
+            "operator": "default:"
+          },
+          {
+            "key": "desc",
+            "label": "描述(原始)",
+            "type": "text",
+            "field_type": 1,
+            "source": "desc",
+            "operator": "default:"
+          },
+          {
+            "key": "desc_text",
+            "label": "描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "desc_text",
+            "operator": "default:"
+          },
+          {
+            "key": "docID",
+            "label": "文档ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "docID",
+            "operator": "default:"
+          },
+          {
+            "key": "detail_url",
+            "label": "详情链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "detail_url",
+            "operator": "default:"
+          },
+          {
+            "key": "doc_url",
+            "label": "原始文章链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "doc_url",
+            "operator": "default:"
+          },
+          {
+            "key": "accTypeName",
+            "label": "内容类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "accTypeName",
+            "operator": "default:"
+          },
+          {
+            "key": "exportId",
+            "label": "导出ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "exportId",
+            "operator": "default:"
+          },
+          {
+            "key": "duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "duration",
+            "operator": "default:"
+          },
+          {
+            "key": "dateTime",
+            "label": "时间描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "dateTime",
+            "operator": "default:"
+          },
+          {
+            "key": "dateTime_beijing",
+            "label": "标准发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "dateTime",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "source_text",
+            "label": "来源名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "source_text",
+            "operator": "default:"
+          },
+          {
+            "key": "iconUrl",
+            "label": "图标链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "iconUrl",
+            "operator": "default:"
+          },
+          {
+            "key": "image",
+            "label": "图片链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "image",
+            "operator": "default:"
+          },
+          {
+            "key": "jump_userName",
+            "label": "跳转用户ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "jumpInfo.userName",
+            "operator": "default:"
+          },
+          {
+            "key": "jump_nickName",
+            "label": "跳转昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "jumpInfo.nickName",
+            "operator": "default:"
+          },
+          {
+            "key": "jump_signature",
+            "label": "跳转签名",
+            "type": "text",
+            "field_type": 1,
+            "source": "jumpInfo.signature",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "business_type": "all"
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "docID",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "extract_wechat_search_items",
+        "set_raw_true",
+        "wechatTime"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "default",
+    "duration",
+    "extract_wechat_search_items",
+    "set_raw_true",
+    "set_with_detail_true",
+    "wechatTime"
+  ]
+}

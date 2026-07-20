@@ -1,0 +1,182 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "zhihu",
+    "name": "知乎",
+    "icon": "❓",
+    "description": "知乎热榜数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "hot_list": {
+      "capability_id": "zhihu.hot_list",
+      "function_id": "hot_list",
+      "name": "热榜",
+      "description": "获取平台热榜/热搜榜数据",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": false,
+        "fields": [
+          {
+            "key": "limit",
+            "label": "返回数量",
+            "type": "number",
+            "default": 50,
+            "min": 1,
+            "max": 50
+          },
+          {
+            "key": "desktop",
+            "label": "桌面端样式",
+            "type": "switch",
+            "default": true,
+            "description": "是否按桌面端样式返回"
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/zhihu/fetch_hot_list",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "limit",
+          "desktop"
+        ],
+        "string_params": [
+          "limit",
+          "desktop"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.list",
+        "pagination": null,
+        "estimate_per_page": 50,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "知乎热榜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "id",
+            "label": "ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "url",
+            "label": "链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "url",
+            "operator": null
+          },
+          {
+            "key": "created",
+            "label": "创建时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "created",
+            "operator": "timestamp"
+          },
+          {
+            "key": "answer_count",
+            "label": "回答数",
+            "type": "number",
+            "field_type": 2,
+            "source": "answer_count",
+            "operator": null
+          },
+          {
+            "key": "follower_count",
+            "label": "关注数",
+            "type": "number",
+            "field_type": 2,
+            "source": "follower_count",
+            "operator": null
+          },
+          {
+            "key": "excerpt",
+            "label": "摘要",
+            "type": "text",
+            "field_type": 1,
+            "source": "excerpt",
+            "operator": null
+          },
+          {
+            "key": "author_name",
+            "label": "作者昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.name",
+            "operator": null
+          },
+          {
+            "key": "author_avatar",
+            "label": "作者头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "author.avatar_url",
+            "operator": null
+          },
+          {
+            "key": "detail_text",
+            "label": "热度描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_text",
+            "operator": null
+          },
+          {
+            "key": "thumbnail",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "thumbnail",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "limit": 50,
+          "desktop": true
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "timestamp"
+  ]
+}

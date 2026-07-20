@@ -1,0 +1,314 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "xiaohongshu",
+    "name": "小红书",
+    "icon": "📕",
+    "description": "小红书数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "hot_list": {
+      "capability_id": "xiaohongshu.hot_list",
+      "function_id": "hot_list",
+      "name": "热榜",
+      "description": "获取平台热榜/热搜榜数据",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": false,
+        "fields": []
+      },
+      "collection": {
+        "endpoint_path": "/tools/xiaohongshu/fetch_hot_list",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.data.items",
+        "pagination": null,
+        "estimate_per_page": 50,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "小红书热榜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "id",
+            "label": "ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "score",
+            "label": "热度分",
+            "type": "text",
+            "field_type": 1,
+            "source": "score",
+            "operator": null
+          },
+          {
+            "key": "rank_change",
+            "label": "排名变化",
+            "type": "number",
+            "field_type": 2,
+            "source": "rank_change",
+            "operator": null
+          },
+          {
+            "key": "type",
+            "label": "类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "type",
+            "operator": null
+          },
+          {
+            "key": "word_type",
+            "label": "话题标记",
+            "type": "text",
+            "field_type": 1,
+            "source": "word_type",
+            "operator": null
+          },
+          {
+            "key": "icon",
+            "label": "图标",
+            "type": "text",
+            "field_type": 1,
+            "source": "icon",
+            "operator": null
+          },
+          {
+            "key": "title_img",
+            "label": "标题图",
+            "type": "text",
+            "field_type": 1,
+            "source": "title_img",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "user_profile": {
+      "capability_id": "xiaohongshu.user_profile",
+      "function_id": "user_profile",
+      "name": "用户主页",
+      "description": "采集用户主页发布的内容",
+      "icon": "👤",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "user_id",
+            "label": "用户ID或主页链接",
+            "type": "text",
+            "required": true,
+            "placeholder": "请输入用户ID或主页链接"
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/xiaohongshu/get_user_notes",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "user_id"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.notes",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "cursor",
+          "response_path": "data.cursor",
+          "has_more_path": "data.has_more",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": "extract_xiaohongshu_user_id",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "小红书用户主页",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "note_id",
+            "label": "笔记ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "note_id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "desc",
+            "label": "描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "desc",
+            "operator": null
+          },
+          {
+            "key": "user_id",
+            "label": "用户ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "user_id",
+            "operator": null
+          },
+          {
+            "key": "user_nickname",
+            "label": "用户昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "user_nickname",
+            "operator": null
+          },
+          {
+            "key": "user_avatar",
+            "label": "用户头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "user_avatar",
+            "operator": null
+          },
+          {
+            "key": "likes",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "likes",
+            "operator": null
+          },
+          {
+            "key": "collected_count",
+            "label": "收藏数",
+            "type": "number",
+            "field_type": 2,
+            "source": "collected_count",
+            "operator": null
+          },
+          {
+            "key": "comments_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "comments_count",
+            "operator": null
+          },
+          {
+            "key": "share_count",
+            "label": "分享数",
+            "type": "number",
+            "field_type": 2,
+            "source": "share_count",
+            "operator": null
+          },
+          {
+            "key": "cover_image",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "cover_image",
+            "operator": null
+          },
+          {
+            "key": "download_url",
+            "label": "资源链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "download_url",
+            "operator": "join_array_cn_preserve_scalar"
+          },
+          {
+            "key": "create_time",
+            "label": "创建时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "create_time",
+            "operator": "timestamp"
+          },
+          {
+            "key": "type",
+            "label": "类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "type",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "note_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "extract_xiaohongshu_user_id",
+        "join_array_cn_preserve_scalar",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "extract_xiaohongshu_user_id",
+    "join_array_cn_preserve_scalar",
+    "timestamp"
+  ]
+}

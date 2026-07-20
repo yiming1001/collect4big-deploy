@@ -1,0 +1,115 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "tools",
+    "name": "通用工具",
+    "icon": "🛠️",
+    "description": "通用数据处理工具",
+    "category_id": "tools",
+    "category_name": "工具"
+  },
+  "capabilities": {
+    "asr_transcribe": {
+      "capability_id": "tools.asr_transcribe",
+      "function_id": "asr_transcribe",
+      "name": "音视频转文案",
+      "description": "将音视频文件转录为文字",
+      "icon": "🎙️",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "file_url",
+            "label": "音视频文件URL",
+            "type": "input",
+            "placeholder": "请输入可访问的公网URL（如：https://example.com/video.mp4）",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/asr/transcribe",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "file_url"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "通用工具音视频转文案",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "task_id",
+            "label": "任务ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "task_id",
+            "operator": null
+          },
+          {
+            "key": "text",
+            "label": "转录文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "text",
+            "operator": null
+          },
+          {
+            "key": "duration_seconds",
+            "label": "时长(秒)",
+            "type": "number",
+            "field_type": 2,
+            "source": "duration_seconds",
+            "operator": null
+          },
+          {
+            "key": "bill_minutes",
+            "label": "计费分钟数",
+            "type": "number",
+            "field_type": 2,
+            "source": "bill_minutes",
+            "operator": null
+          },
+          {
+            "key": "cost_credits",
+            "label": "消耗积分",
+            "type": "number",
+            "field_type": 2,
+            "source": "cost_credits",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "task_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": []
+}

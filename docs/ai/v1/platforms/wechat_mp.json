@@ -1,0 +1,487 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "wechat_mp",
+    "name": "微信公众号",
+    "icon": "🟩",
+    "description": "微信公众号文章与账号发文采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "article_detail": {
+      "capability_id": "wechat_mp.article_detail",
+      "function_id": "article_detail",
+      "name": "文章详情",
+      "description": "按公众号文章链接获取正文、标题、作者、封面和发布时间",
+      "icon": "📄",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "url",
+            "label": "文章链接",
+            "type": "textarea",
+            "placeholder": "请输入公众号文章链接（https://mp.weixin.qq.com/s/...）",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_mp/fetch_article_detail",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "url",
+          "raw"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": "normalize_wechat_article_detail_params",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信公众号文章详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "url",
+            "label": "文章链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "url",
+            "operator": null
+          },
+          {
+            "key": "biz_uin",
+            "label": "公众号BizUin",
+            "type": "text",
+            "field_type": 1,
+            "source": "bizUin",
+            "operator": "default:"
+          },
+          {
+            "key": "item_idx",
+            "label": "图文位置",
+            "type": "number",
+            "field_type": 2,
+            "source": "itemIdx",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.title",
+            "operator": "default:"
+          },
+          {
+            "key": "nick_name",
+            "label": "公众号名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.nick_name",
+            "operator": "default:"
+          },
+          {
+            "key": "user_name",
+            "label": "公众号ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.user_name",
+            "operator": "default:"
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.author",
+            "operator": "default:"
+          },
+          {
+            "key": "desc",
+            "label": "摘要",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.desc",
+            "operator": "default:"
+          },
+          {
+            "key": "create_time_text",
+            "label": "发布时间文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.create_time",
+            "operator": "default:"
+          },
+          {
+            "key": "ori_create_time",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "content.ori_create_time",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "cdn_url",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.cdn_url",
+            "operator": "default:"
+          },
+          {
+            "key": "comment_id",
+            "label": "评论ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.comment_id",
+            "operator": "default:"
+          },
+          {
+            "key": "content_text",
+            "label": "正文文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.content_text",
+            "operator": "default:"
+          },
+          {
+            "key": "album_id",
+            "label": "合集ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.appmsgalbuminfo.album_id",
+            "operator": "default:"
+          },
+          {
+            "key": "album_title",
+            "label": "合集标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.appmsgalbuminfo.title",
+            "operator": "default:"
+          },
+          {
+            "key": "album_info",
+            "label": "合集信息JSON",
+            "type": "text",
+            "field_type": 1,
+            "source": "content.appmsgalbuminfo",
+            "operator": "json_text_empty"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "url",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "json_text_empty",
+        "normalize_wechat_article_detail_params",
+        "wechatTime"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "account_articles": {
+      "capability_id": "wechat_mp.account_articles",
+      "function_id": "account_articles",
+      "name": "账号文章列表",
+      "description": "按 gh_username 采集公众号历史发文列表",
+      "icon": "📰",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "username",
+            "label": "公众号ID",
+            "type": "input",
+            "placeholder": "请输入 gh_username（如 gh_363b924965e9）",
+            "required": true
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "default": 20,
+            "min": 10,
+            "max": 20
+          },
+          {
+            "key": "item_show_type",
+            "label": "内容栏目",
+            "type": "select",
+            "default": "",
+            "options": [
+              {
+                "label": "文章",
+                "value": ""
+              },
+              {
+                "label": "视频",
+                "value": "5"
+              },
+              {
+                "label": "音频",
+                "value": "7"
+              },
+              {
+                "label": "贴图",
+                "value": "8"
+              }
+            ]
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/wechat_mp/fetch_account_articles",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "username",
+          "page_size",
+          "offset",
+          "item_show_type",
+          "raw"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "offset"
+        ],
+        "request_meta": {
+          "query_username": "username",
+          "query_item_show_type": "item_show_type"
+        },
+        "response_meta": {
+          "biz_username": "data.biz_username",
+          "is_end": "data.is_end",
+          "page_count": "data.count",
+          "next_offset": "data.next_offset"
+        },
+        "data_path": "data.articles",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "offset",
+          "initial_value": "",
+          "response_path": "data.next_offset",
+          "has_more_path": "",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": "normalize_wechat_account_articles_params",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微信公众号账号文章列表",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "query_username",
+            "label": "查询公众号ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "query_username",
+            "operator": "default:"
+          },
+          {
+            "key": "biz_username",
+            "label": "返回公众号ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "biz_username",
+            "operator": "default:"
+          },
+          {
+            "key": "app_msg_id",
+            "label": "文章AppMsgID",
+            "type": "text",
+            "field_type": 1,
+            "source": "app_msg_id",
+            "operator": "default:"
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": "default:"
+          },
+          {
+            "key": "digest",
+            "label": "摘要",
+            "type": "text",
+            "field_type": 1,
+            "source": "digest",
+            "operator": "default:"
+          },
+          {
+            "key": "url",
+            "label": "文章链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "url",
+            "operator": "default:"
+          },
+          {
+            "key": "cover",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "cover",
+            "operator": "default:"
+          },
+          {
+            "key": "covers",
+            "label": "多比例封面JSON",
+            "type": "text",
+            "field_type": 1,
+            "source": "covers",
+            "operator": "json_text_empty"
+          },
+          {
+            "key": "create_time",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "create_time",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "update_time",
+            "label": "更新时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "update_time",
+            "operator": "wechatTime"
+          },
+          {
+            "key": "idx",
+            "label": "群发内位置",
+            "type": "number",
+            "field_type": 2,
+            "source": "idx",
+            "operator": null
+          },
+          {
+            "key": "msg_type",
+            "label": "消息类型",
+            "type": "number",
+            "field_type": 2,
+            "source": "msg_type",
+            "operator": null
+          },
+          {
+            "key": "item_show_type",
+            "label": "内容栏目编码",
+            "type": "number",
+            "field_type": 2,
+            "source": "item_show_type",
+            "operator": null
+          },
+          {
+            "key": "pic_count",
+            "label": "图文数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "pic_count",
+            "operator": null
+          },
+          {
+            "key": "is_paid",
+            "label": "是否付费",
+            "type": "number",
+            "field_type": 2,
+            "source": "is_paid",
+            "operator": null
+          },
+          {
+            "key": "is_pay_subscribe",
+            "label": "是否付费订阅",
+            "type": "number",
+            "field_type": 2,
+            "source": "is_pay_subscribe",
+            "operator": null
+          },
+          {
+            "key": "page_count",
+            "label": "本页数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_count",
+            "operator": null
+          },
+          {
+            "key": "is_end",
+            "label": "是否末页",
+            "type": "number",
+            "field_type": 2,
+            "source": "is_end",
+            "operator": null
+          },
+          {
+            "key": "next_offset",
+            "label": "下一页游标",
+            "type": "text",
+            "field_type": 1,
+            "source": "next_offset",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "page_size": 20,
+          "item_show_type": ""
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "app_msg_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "json_text_empty",
+        "normalize_wechat_account_articles_params",
+        "wechatTime"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "default",
+    "json_text_empty",
+    "normalize_wechat_account_articles_params",
+    "normalize_wechat_article_detail_params",
+    "wechatTime"
+  ]
+}

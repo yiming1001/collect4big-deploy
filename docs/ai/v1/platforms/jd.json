@@ -1,0 +1,714 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "jd",
+    "name": "京东",
+    "icon": "🛒",
+    "description": "京东商品采集",
+    "category_id": "domestic_ecommerce",
+    "category_name": "国内电商"
+  },
+  "capabilities": {
+    "jd_item_get_pro": {
+      "capability_id": "jd.jd_item_get_pro",
+      "function_id": "jd_item_get_pro",
+      "name": "商品详情",
+      "description": "按商品ID获取京东商品详情，自动写入商品主表+SKU表",
+      "icon": "🧾",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "num_iid",
+            "label": "商品ID(num_iid)",
+            "type": "input",
+            "placeholder": "请输入京东商品ID，例如 10057467958584",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/jd/item_get_pro",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "num_iid"
+        ],
+        "string_params": [
+          "num_iid"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": [
+          "data.item",
+          "item"
+        ],
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "京东商品详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_iid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "商品现价",
+            "type": "number",
+            "field_type": 2,
+            "source": "price",
+            "operator": null
+          },
+          {
+            "key": "original_price",
+            "label": "商品原价",
+            "type": "number",
+            "field_type": 2,
+            "source": "orginal_price",
+            "operator": null
+          },
+          {
+            "key": "stock_total",
+            "label": "商品库存",
+            "type": "number",
+            "field_type": 2,
+            "source": "num",
+            "operator": null
+          },
+          {
+            "key": "main_image",
+            "label": "商品主图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic_url",
+            "operator": null
+          },
+          {
+            "key": "detail_url",
+            "label": "商品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_url",
+            "operator": null
+          },
+          {
+            "key": "detail_images_text",
+            "label": "详情图",
+            "type": "text",
+            "field_type": 1,
+            "source": "desc_img",
+            "operator": "join_array_cn"
+          },
+          {
+            "key": "params_text",
+            "label": "商品参数文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "props",
+            "operator": "name_value_pairs_text"
+          },
+          {
+            "key": "seller_id",
+            "label": "卖家ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_id",
+            "operator": null
+          },
+          {
+            "key": "seller_nick",
+            "label": "卖家昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "nick",
+            "operator": null
+          },
+          {
+            "key": "shop_id",
+            "label": "店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "shop_id",
+            "operator": null
+          },
+          {
+            "key": "seller_info_text",
+            "label": "卖家信息文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info",
+            "operator": "json_text"
+          },
+          {
+            "key": "location",
+            "label": "发货地",
+            "type": "text",
+            "field_type": 1,
+            "source": "location",
+            "operator": null
+          },
+          {
+            "key": "detail_img_count",
+            "label": "详情图数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "desc_img",
+            "operator": "array_length"
+          },
+          {
+            "key": "has_detail_img",
+            "label": "是否有详情图",
+            "type": "number",
+            "field_type": 2,
+            "source": "desc_img",
+            "operator": "array_nonempty_int"
+          }
+        ],
+        "multi_table_mode": "product_sku"
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "num_lid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "array_length",
+        "array_nonempty_int",
+        "join_array_cn",
+        "json_text",
+        "name_value_pairs_text"
+      ],
+      "runtime_support": {
+        "supported": false,
+        "reason": "multi_table_mode=product_sku is not supported by runtime v1"
+      }
+    },
+    "jd_item_review": {
+      "capability_id": "jd.jd_item_review",
+      "function_id": "jd_item_review",
+      "name": "商品评论",
+      "description": "采集京东商品评论",
+      "icon": "🗨️",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "num_iid",
+            "label": "商品ID(num_iid)",
+            "type": "input",
+            "placeholder": "请输入京东商品ID，例如 71619129750",
+            "required": true
+          },
+          {
+            "key": "sort",
+            "label": "排序(可选)",
+            "type": "select",
+            "default": "",
+            "options": [
+              {
+                "label": "默认排序",
+                "value": ""
+              },
+              {
+                "label": "最新排序(new)",
+                "value": "new"
+              }
+            ]
+          },
+          {
+            "key": "is_sku",
+            "label": "是否按SKU评论",
+            "type": "select",
+            "default": "false",
+            "options": [
+              {
+                "label": "否(false)",
+                "value": "false"
+              },
+              {
+                "label": "是(true)",
+                "value": "true"
+              }
+            ]
+          },
+          {
+            "key": "raw_data",
+            "label": "raw_data(可选)",
+            "type": "input",
+            "default": ""
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/jd/item_review",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "num_iid",
+          "page",
+          "sort",
+          "is_sku",
+          "raw_data"
+        ],
+        "string_params": [
+          "num_iid",
+          "page",
+          "sort",
+          "is_sku",
+          "raw_data"
+        ],
+        "omit_empty_params": [
+          "sort",
+          "raw_data"
+        ],
+        "request_meta": {
+          "num_lid": "num_iid"
+        },
+        "response_meta": {
+          "page": [
+            "data.items.page",
+            "items.page"
+          ],
+          "page_size": [
+            "data.items.page_size",
+            "items.page_size"
+          ],
+          "page_count": [
+            "data.items.page_count",
+            "items.page_count"
+          ],
+          "total_results": [
+            "data.items.total_results",
+            "items.total_results"
+          ],
+          "real_total_results": [
+            "data.items.real_total_results",
+            "items.real_total_results"
+          ],
+          "good_rate": [
+            "data.items.good_rate",
+            "items.good_rate"
+          ]
+        },
+        "data_path": [
+          "data.items.item",
+          "items.item"
+        ],
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 10,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "京东商品评论",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_lid",
+            "operator": null
+          },
+          {
+            "key": "review_unique_key",
+            "label": "评论唯一键",
+            "type": "text",
+            "field_type": 1,
+            "source": null,
+            "operator": "jd_review_unique_key"
+          },
+          {
+            "key": "rate_id",
+            "label": "评论ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "rate_id",
+            "operator": null
+          },
+          {
+            "key": "page",
+            "label": "页码",
+            "type": "number",
+            "field_type": 2,
+            "source": "page",
+            "operator": null
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_size",
+            "operator": null
+          },
+          {
+            "key": "page_count",
+            "label": "总页数",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_count",
+            "operator": null
+          },
+          {
+            "key": "total_results",
+            "label": "总评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "total_results",
+            "operator": null
+          },
+          {
+            "key": "real_total_results",
+            "label": "真实评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "real_total_results",
+            "operator": null
+          },
+          {
+            "key": "good_rate",
+            "label": "好评率",
+            "type": "number",
+            "field_type": 2,
+            "source": "good_rate",
+            "operator": null
+          },
+          {
+            "key": "rate_content",
+            "label": "评论内容",
+            "type": "text",
+            "field_type": 1,
+            "source": "rate_content",
+            "operator": null
+          },
+          {
+            "key": "rate_date",
+            "label": "评论时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "rate_date",
+            "operator": null
+          },
+          {
+            "key": "display_user_nick",
+            "label": "用户昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "display_user_nick",
+            "operator": null
+          },
+          {
+            "key": "auction_sku",
+            "label": "购买规格",
+            "type": "text",
+            "field_type": 1,
+            "source": "auction_sku",
+            "operator": null
+          },
+          {
+            "key": "score",
+            "label": "评分",
+            "type": "number",
+            "field_type": 2,
+            "source": "score",
+            "operator": null
+          },
+          {
+            "key": "pics_text",
+            "label": "评论图片",
+            "type": "text",
+            "field_type": 1,
+            "source": "pics",
+            "operator": "join_pics"
+          },
+          {
+            "key": "add_feedback",
+            "label": "追评内容",
+            "type": "text",
+            "field_type": 1,
+            "source": "add_feedback",
+            "operator": "default:"
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "sort": "",
+          "is_sku": "false",
+          "raw_data": ""
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "review_unique_key",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "default",
+        "jd_review_unique_key",
+        "join_pics"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "jd_item_search_shop": {
+      "capability_id": "jd.jd_item_search_shop",
+      "function_id": "jd_item_search_shop",
+      "name": "店铺商品",
+      "description": "按店铺名获取京东店铺商品",
+      "icon": "🏪",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "seller_nick",
+            "label": "店铺名称(seller_nick)",
+            "type": "input",
+            "placeholder": "请输入店铺名称，例如 特步平途专卖店",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/jd/item_search_shop",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "seller_nick",
+          "page"
+        ],
+        "string_params": [
+          "seller_nick",
+          "page"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {
+          "seller_nick_query": "seller_nick"
+        },
+        "response_meta": {
+          "page": [
+            "data.items.page",
+            "items.page"
+          ],
+          "page_size": [
+            "data.items.page_size",
+            "items.page_size"
+          ],
+          "pagecount": [
+            "data.items.pagecount",
+            "items.pagecount"
+          ],
+          "total_results": [
+            "data.items.total_results",
+            "items.total_results"
+          ],
+          "real_total_results": [
+            "data.items.real_total_results",
+            "items.real_total_results"
+          ],
+          "seller_nick": [
+            "data.items.nick",
+            "items.nick"
+          ]
+        },
+        "data_path": [
+          "data.items.item",
+          "items.item"
+        ],
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "京东店铺商品",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "seller_nick_query",
+            "label": "查询店铺名",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_nick_query",
+            "operator": null
+          },
+          {
+            "key": "seller_nick",
+            "label": "店铺名",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_nick",
+            "operator": null
+          },
+          {
+            "key": "page",
+            "label": "页码",
+            "type": "number",
+            "field_type": 2,
+            "source": "page",
+            "operator": null
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_size",
+            "operator": null
+          },
+          {
+            "key": "pagecount",
+            "label": "总页数",
+            "type": "number",
+            "field_type": 2,
+            "source": "pagecount",
+            "operator": null
+          },
+          {
+            "key": "total_results",
+            "label": "总结果数",
+            "type": "number",
+            "field_type": 2,
+            "source": "total_results",
+            "operator": null
+          },
+          {
+            "key": "real_total_results",
+            "label": "真实结果数",
+            "type": "number",
+            "field_type": 2,
+            "source": "real_total_results",
+            "operator": null
+          },
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_iid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "商品价格",
+            "type": "number",
+            "field_type": 2,
+            "source": "price",
+            "operator": null
+          },
+          {
+            "key": "sales",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sales",
+            "operator": null
+          },
+          {
+            "key": "seller",
+            "label": "卖家",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller",
+            "operator": null
+          },
+          {
+            "key": "pic_url",
+            "label": "商品主图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic_url",
+            "operator": null
+          },
+          {
+            "key": "detail_url",
+            "label": "商品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_url",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "num_lid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "array_length",
+    "array_nonempty_int",
+    "default",
+    "jd_review_unique_key",
+    "join_array_cn",
+    "join_pics",
+    "json_text",
+    "name_value_pairs_text"
+  ]
+}

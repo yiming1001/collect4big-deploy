@@ -1,0 +1,241 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "bilibili",
+    "name": "B站",
+    "icon": "📺",
+    "description": "哔哩哔哩热门视频数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "hot_list": {
+      "capability_id": "bilibili.hot_list",
+      "function_id": "hot_list",
+      "name": "热榜",
+      "description": "获取平台热榜/热搜榜数据",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "pn",
+            "label": "起始页码",
+            "type": "number",
+            "default": 1,
+            "min": 1,
+            "max": 100
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/bilibili/fetch_com_popular",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "pn"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.list",
+        "pagination": {
+          "type": "page",
+          "param_name": "pn",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "B站热榜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "aid",
+            "label": "稿件ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "aid",
+            "operator": null
+          },
+          {
+            "key": "bvid",
+            "label": "BVID",
+            "type": "text",
+            "field_type": 1,
+            "source": "bvid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "tname",
+            "label": "分区",
+            "type": "text",
+            "field_type": 1,
+            "source": "tname",
+            "operator": null
+          },
+          {
+            "key": "pubdate",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "pubdate",
+            "operator": "timestamp"
+          },
+          {
+            "key": "duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "duration",
+            "operator": "duration"
+          },
+          {
+            "key": "pub_location",
+            "label": "发布地区",
+            "type": "text",
+            "field_type": 1,
+            "source": "pub_location",
+            "operator": null
+          },
+          {
+            "key": "view",
+            "label": "播放量",
+            "type": "number",
+            "field_type": 2,
+            "source": "view",
+            "operator": null
+          },
+          {
+            "key": "danmaku",
+            "label": "弹幕数",
+            "type": "number",
+            "field_type": 2,
+            "source": "danmaku",
+            "operator": null
+          },
+          {
+            "key": "reply",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "reply",
+            "operator": null
+          },
+          {
+            "key": "favorite",
+            "label": "收藏数",
+            "type": "number",
+            "field_type": 2,
+            "source": "favorite",
+            "operator": null
+          },
+          {
+            "key": "coin",
+            "label": "投币数",
+            "type": "number",
+            "field_type": 2,
+            "source": "coin",
+            "operator": null
+          },
+          {
+            "key": "share",
+            "label": "分享数",
+            "type": "number",
+            "field_type": 2,
+            "source": "share",
+            "operator": null
+          },
+          {
+            "key": "like",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "like",
+            "operator": null
+          },
+          {
+            "key": "short_link_v2",
+            "label": "短链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "short_link_v2",
+            "operator": null
+          },
+          {
+            "key": "pic",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic",
+            "operator": null
+          },
+          {
+            "key": "owner_mid",
+            "label": "UP主ID",
+            "type": "number",
+            "field_type": 2,
+            "source": "owner.mid",
+            "operator": null
+          },
+          {
+            "key": "owner_name",
+            "label": "UP主昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "owner.name",
+            "operator": null
+          },
+          {
+            "key": "owner_face",
+            "label": "UP主头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "owner.face",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "pn": 1
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "bvid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "duration",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "duration",
+    "timestamp"
+  ]
+}

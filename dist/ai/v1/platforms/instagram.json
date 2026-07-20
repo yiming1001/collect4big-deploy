@@ -1,0 +1,731 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "instagram",
+    "name": "Instagram",
+    "icon": "📷",
+    "description": "Instagram 内容与话题采集",
+    "category_id": "overseas_media",
+    "category_name": "海外社媒与流媒体"
+  },
+  "capabilities": {
+    "instagram_post_search": {
+      "capability_id": "instagram.instagram_post_search",
+      "function_id": "instagram_post_search",
+      "name": "综合搜索",
+      "description": "按关键词搜索 Instagram 内容",
+      "icon": "🔎",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "query",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入 Instagram 搜索关键词",
+            "required": true
+          },
+          {
+            "key": "enable_metadata",
+            "label": "启用元数据",
+            "type": "boolean",
+            "default": false,
+            "description": "按上游支持返回附加元数据"
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/instagram/general_search",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "query",
+          "next_max_id",
+          "rank_token",
+          "enable_metadata"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "next_max_id",
+          "rank_token"
+        ],
+        "request_meta": {
+          "search_keyword": "query"
+        },
+        "response_meta": {},
+        "data_path": "data.media_grid.sections",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "next_max_id",
+          "initial_value": "",
+          "response_path": "data.media_grid.next_max_id",
+          "has_more_path": "data.media_grid.has_more",
+          "response_params": {
+            "rank_token": "data.media_grid.rank_token"
+          }
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": "extract_instagram_search_posts"
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Instagram综合搜索",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "帖子ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "shortcode",
+            "label": "短码",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": null
+          },
+          {
+            "key": "caption",
+            "label": "文案",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "caption.text",
+              "edge_media_to_caption.edges.0.node.text"
+            ],
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "owner.username",
+              "user.username"
+            ],
+            "operator": null
+          },
+          {
+            "key": "content_type",
+            "label": "内容类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_type",
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": [
+              "taken_at",
+              "taken_at_timestamp"
+            ],
+            "operator": "timestamp"
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "like_count",
+              "edge_media_preview_like.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "comment_count",
+              "edge_media_preview_comment.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "play_count",
+            "label": "播放数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "play_count",
+              "ig_play_count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "封面图",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "image_versions2.candidates.0.url",
+              "display_url"
+            ],
+            "operator": null
+          },
+          {
+            "key": "post_url",
+            "label": "帖子链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": "instagram_post_url"
+          },
+          {
+            "key": "search_keyword",
+            "label": "采集关键词",
+            "type": "text",
+            "field_type": 1,
+            "source": "search_keyword",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "enable_metadata": false
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "post_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "extract_instagram_search_posts",
+        "instagram_post_url",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "instagram_user_posts": {
+      "capability_id": "instagram.instagram_user_posts",
+      "function_id": "instagram_user_posts",
+      "name": "用户帖子",
+      "description": "采集 Instagram 用户发布的帖子",
+      "icon": "🖼️",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "user_id",
+            "label": "Instagram 用户ID",
+            "type": "input",
+            "placeholder": "请输入 Instagram 用户 ID",
+            "required": true
+          },
+          {
+            "key": "count",
+            "label": "每页数量",
+            "type": "number",
+            "default": 12,
+            "min": 1,
+            "max": 50
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/instagram/fetch_user_posts",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "user_id",
+          "count",
+          "max_id"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "max_id"
+        ],
+        "request_meta": {
+          "source_user_id": "user_id"
+        },
+        "response_meta": {},
+        "data_path": "data.items",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "max_id",
+          "initial_value": "",
+          "response_path": "data.next_max_id",
+          "has_more_path": "data.more_available",
+          "response_params": {}
+        },
+        "estimate_per_page": 12,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Instagram用户帖子",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "帖子ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "shortcode",
+            "label": "短码",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": null
+          },
+          {
+            "key": "caption",
+            "label": "文案",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "caption.text",
+              "edge_media_to_caption.edges.0.node.text"
+            ],
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "owner.username",
+              "user.username"
+            ],
+            "operator": null
+          },
+          {
+            "key": "content_type",
+            "label": "内容类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_type",
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": [
+              "taken_at",
+              "taken_at_timestamp"
+            ],
+            "operator": "timestamp"
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "like_count",
+              "edge_media_preview_like.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "comment_count",
+              "edge_media_preview_comment.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "play_count",
+            "label": "播放数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "play_count",
+              "ig_play_count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "封面图",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "image_versions2.candidates.0.url",
+              "display_url"
+            ],
+            "operator": null
+          },
+          {
+            "key": "post_url",
+            "label": "帖子链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": "instagram_post_url"
+          },
+          {
+            "key": "source_user_id",
+            "label": "采集账号ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "source_user_id",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "count": 12
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "post_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "instagram_post_url",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "instagram_hashtag_search": {
+      "capability_id": "instagram.instagram_hashtag_search",
+      "function_id": "instagram_hashtag_search",
+      "name": "话题标签",
+      "description": "搜索 Instagram 话题标签",
+      "icon": "#",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "query",
+            "label": "话题关键词",
+            "type": "input",
+            "placeholder": "请输入 Instagram 话题关键词",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/instagram/search_hashtags",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "query",
+          "rank_token"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "rank_token"
+        ],
+        "request_meta": {
+          "search_keyword": "query"
+        },
+        "response_meta": {},
+        "data_path": "data.hashtags",
+        "pagination": null,
+        "estimate_per_page": 20,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Instagram话题标签",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "hashtag_id",
+            "label": "话题ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "hashtag_name",
+            "label": "话题",
+            "type": "text",
+            "field_type": 1,
+            "source": "name",
+            "operator": null
+          },
+          {
+            "key": "media_count",
+            "label": "内容数",
+            "type": "number",
+            "field_type": 2,
+            "source": "media_count",
+            "operator": null
+          },
+          {
+            "key": "profile_pic_url",
+            "label": "话题图片",
+            "type": "url",
+            "field_type": 15,
+            "source": "profile_pic_url",
+            "operator": null
+          },
+          {
+            "key": "search_keyword",
+            "label": "采集关键词",
+            "type": "text",
+            "field_type": 1,
+            "source": "search_keyword",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "hashtag_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "instagram_post_detail": {
+      "capability_id": "instagram.instagram_post_detail",
+      "function_id": "instagram_post_detail",
+      "name": "帖子详情",
+      "description": "按帖子 ID 获取 Instagram 内容详情",
+      "icon": "📄",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "Instagram 帖子ID",
+            "type": "input",
+            "placeholder": "请输入 Instagram 帖子 ID",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/instagram/fetch_post_by_id",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "post_id"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {
+          "requested_post_id": "post_id"
+        },
+        "response_meta": {},
+        "data_path": "data",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Instagram帖子详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "帖子ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "shortcode",
+            "label": "短码",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": null
+          },
+          {
+            "key": "caption",
+            "label": "文案",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "caption.text",
+              "edge_media_to_caption.edges.0.node.text"
+            ],
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "owner.username",
+              "user.username"
+            ],
+            "operator": null
+          },
+          {
+            "key": "content_type",
+            "label": "内容类型",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_type",
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": [
+              "taken_at",
+              "taken_at_timestamp"
+            ],
+            "operator": "timestamp"
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "like_count",
+              "edge_media_preview_like.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "comment_count",
+              "edge_media_preview_comment.count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "play_count",
+            "label": "播放数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "play_count",
+              "ig_play_count"
+            ],
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "封面图",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "image_versions2.candidates.0.url",
+              "display_url"
+            ],
+            "operator": null
+          },
+          {
+            "key": "post_url",
+            "label": "帖子链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "code",
+              "shortcode"
+            ],
+            "operator": "instagram_post_url"
+          },
+          {
+            "key": "requested_post_id",
+            "label": "请求帖子ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "requested_post_id",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "post_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "instagram_post_url",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "extract_instagram_search_posts",
+    "instagram_post_url",
+    "timestamp"
+  ]
+}

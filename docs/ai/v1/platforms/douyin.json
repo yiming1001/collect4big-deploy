@@ -1,0 +1,663 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "douyin",
+    "name": "抖音",
+    "icon": "🎵",
+    "description": "抖音数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "hot_list": {
+      "capability_id": "douyin.hot_list",
+      "function_id": "hot_list",
+      "name": "热榜",
+      "description": "获取平台热榜/热搜榜数据",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "func",
+            "label": "热榜类型",
+            "type": "select",
+            "required": true,
+            "default": "high_play",
+            "options": [
+              {
+                "value": "high_play",
+                "label": "高完播榜"
+              },
+              {
+                "value": "low_fan",
+                "label": "低粉热榜"
+              },
+              {
+                "value": "total",
+                "label": "综合热榜"
+              },
+              {
+                "value": "high_like",
+                "label": "高点赞榜"
+              },
+              {
+                "value": "high_fan",
+                "label": "高涨粉榜"
+              }
+            ]
+          },
+          {
+            "key": "tags",
+            "label": "垂类标签（可选）",
+            "type": "select",
+            "default": [],
+            "multiple": true,
+            "options": [
+              {
+                "value": "628",
+                "label": "美食"
+              },
+              {
+                "value": "629",
+                "label": "旅行"
+              },
+              {
+                "value": "634",
+                "label": "休闲娱乐"
+              },
+              {
+                "value": "624",
+                "label": "文化"
+              },
+              {
+                "value": "612",
+                "label": "舞蹈"
+              },
+              {
+                "value": "626",
+                "label": "教育校园"
+              },
+              {
+                "value": "632",
+                "label": "艺术"
+              },
+              {
+                "value": "610",
+                "label": "公益"
+              },
+              {
+                "value": "631",
+                "label": "时尚"
+              },
+              {
+                "value": "635",
+                "label": "汽车"
+              },
+              {
+                "value": "613",
+                "label": "动物"
+              },
+              {
+                "value": "614",
+                "label": "三农"
+              },
+              {
+                "value": "605",
+                "label": "电视剧"
+              },
+              {
+                "value": "607",
+                "label": "二次元"
+              },
+              {
+                "value": "633",
+                "label": "体育"
+              },
+              {
+                "value": "621",
+                "label": "医疗健康"
+              },
+              {
+                "value": "604",
+                "label": "电影"
+              },
+              {
+                "value": "606",
+                "label": "音乐"
+              },
+              {
+                "value": "602",
+                "label": "明星"
+              },
+              {
+                "value": "627",
+                "label": "摄影摄像"
+              },
+              {
+                "value": "611",
+                "label": "随拍"
+              },
+              {
+                "value": "619",
+                "label": "生活家居"
+              },
+              {
+                "value": "641",
+                "label": "颜值"
+              },
+              {
+                "value": "623",
+                "label": "情感"
+              },
+              {
+                "value": "638",
+                "label": "人文社科"
+              },
+              {
+                "value": "616",
+                "label": "财经"
+              },
+              {
+                "value": "615",
+                "label": "科技"
+              },
+              {
+                "value": "622",
+                "label": "科普"
+              },
+              {
+                "value": "625",
+                "label": "职场"
+              },
+              {
+                "value": "603",
+                "label": "综艺"
+              },
+              {
+                "value": "617",
+                "label": "母婴"
+              },
+              {
+                "value": "636",
+                "label": "生活记录"
+              },
+              {
+                "value": "620",
+                "label": "法律"
+              },
+              {
+                "value": "618",
+                "label": "亲子"
+              },
+              {
+                "value": "601",
+                "label": "剧情"
+              },
+              {
+                "value": "608",
+                "label": "游戏"
+              }
+            ]
+          },
+          {
+            "key": "page",
+            "label": "页码",
+            "type": "number",
+            "default": 1,
+            "min": 1
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "default": 40,
+            "min": 1,
+            "max": 100
+          },
+          {
+            "key": "data_window",
+            "label": "数据窗口（小时）",
+            "type": "number",
+            "default": 24,
+            "min": 1,
+            "max": 72
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/douyin/fetch_hot_total_high_play_list",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "page",
+          "page_size",
+          "data_window",
+          "func",
+          "tags"
+        ],
+        "string_params": [
+          "page",
+          "page_size",
+          "data_window",
+          "func"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.data.objs",
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 40,
+        "allow_collect_all": true,
+        "param_operator": "array_to_value_objects",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "抖音热榜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "item_id",
+            "label": "作品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "item_id",
+            "operator": null
+          },
+          {
+            "key": "item_title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "item_title",
+            "operator": null
+          },
+          {
+            "key": "item_cover_url",
+            "label": "封面图",
+            "type": "text",
+            "field_type": 1,
+            "source": "item_cover_url",
+            "operator": null
+          },
+          {
+            "key": "item_duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "item_duration",
+            "operator": "duration"
+          },
+          {
+            "key": "nick_name",
+            "label": "作者昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "nick_name",
+            "operator": null
+          },
+          {
+            "key": "avatar_url",
+            "label": "作者头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "avatar_url",
+            "operator": null
+          },
+          {
+            "key": "fans_cnt",
+            "label": "粉丝数",
+            "type": "number",
+            "field_type": 2,
+            "source": "fans_cnt",
+            "operator": null
+          },
+          {
+            "key": "play_cnt",
+            "label": "播放量",
+            "type": "number",
+            "field_type": 2,
+            "source": "play_cnt",
+            "operator": null
+          },
+          {
+            "key": "publish_time",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "publish_time",
+            "operator": "timestamp"
+          },
+          {
+            "key": "score",
+            "label": "热度得分",
+            "type": "number",
+            "field_type": 2,
+            "source": "score",
+            "operator": null
+          },
+          {
+            "key": "item_url",
+            "label": "作品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "item_url",
+            "operator": null
+          },
+          {
+            "key": "like_cnt",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "like_cnt",
+            "operator": null
+          },
+          {
+            "key": "follow_cnt",
+            "label": "涨粉数",
+            "type": "number",
+            "field_type": 2,
+            "source": "follow_cnt",
+            "operator": null
+          },
+          {
+            "key": "follow_rate",
+            "label": "涨粉率",
+            "type": "number",
+            "field_type": 2,
+            "source": "follow_rate",
+            "operator": null
+          },
+          {
+            "key": "like_rate",
+            "label": "点赞率",
+            "type": "number",
+            "field_type": 2,
+            "source": "like_rate",
+            "operator": null
+          },
+          {
+            "key": "media_type",
+            "label": "媒体类型",
+            "type": "number",
+            "field_type": 2,
+            "source": "media_type",
+            "operator": null
+          },
+          {
+            "key": "favorite_id",
+            "label": "收藏ID",
+            "type": "number",
+            "field_type": 2,
+            "source": "favorite_id",
+            "operator": null
+          },
+          {
+            "key": "is_favorite",
+            "label": "是否收藏",
+            "type": "text",
+            "field_type": 1,
+            "source": "is_favorite",
+            "operator": null
+          },
+          {
+            "key": "image_cnt",
+            "label": "图片数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "image_cnt",
+            "operator": null
+          },
+          {
+            "key": "selected_tags",
+            "label": "话题",
+            "type": "text",
+            "field_type": 1,
+            "source": null,
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "func": "high_play",
+          "tags": [],
+          "page": 1,
+          "page_size": 40,
+          "data_window": 24
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "item_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "array_to_value_objects",
+        "duration",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "user_profile": {
+      "capability_id": "douyin.user_profile",
+      "function_id": "user_profile",
+      "name": "用户主页",
+      "description": "采集用户主页发布的内容",
+      "icon": "👤",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "sec_user_id",
+            "label": "用户安全ID或主页链接",
+            "type": "text",
+            "required": true,
+            "placeholder": "请输入用户安全ID或主页链接"
+          },
+          {
+            "key": "count",
+            "label": "每页数量",
+            "type": "number",
+            "required": false,
+            "default": 30,
+            "min": 1,
+            "max": 100
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/douyin/fetch_user_post_videos",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "sec_user_id",
+          "count"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.videos",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "max_cursor",
+          "response_path": "data.max_cursor",
+          "has_more_path": "data.has_more",
+          "response_params": {}
+        },
+        "estimate_per_page": 30,
+        "allow_collect_all": true,
+        "param_operator": "extract_douyin_sec_user_id",
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "抖音用户主页",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "video_id",
+            "label": "视频ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_id",
+            "operator": null
+          },
+          {
+            "key": "author_name",
+            "label": "作者名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "author_name",
+            "operator": null
+          },
+          {
+            "key": "author_id",
+            "label": "作者ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "author_id",
+            "operator": null
+          },
+          {
+            "key": "video_desc",
+            "label": "视频描述",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_desc",
+            "operator": null
+          },
+          {
+            "key": "create_time",
+            "label": "创建时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "create_time",
+            "operator": "timestamp"
+          },
+          {
+            "key": "author_avatar",
+            "label": "作者头像",
+            "type": "text",
+            "field_type": 1,
+            "source": "author_avatar",
+            "operator": null
+          },
+          {
+            "key": "video_cover",
+            "label": "视频封面",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_cover",
+            "operator": null
+          },
+          {
+            "key": "share_url",
+            "label": "分享链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "share_url",
+            "operator": null
+          },
+          {
+            "key": "duration",
+            "label": "时长",
+            "type": "text",
+            "field_type": 1,
+            "source": "duration",
+            "operator": "duration"
+          },
+          {
+            "key": "collect_count",
+            "label": "收藏数",
+            "type": "number",
+            "field_type": 2,
+            "source": "collect_count",
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "comment_count",
+            "operator": null
+          },
+          {
+            "key": "digg_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": "digg_count",
+            "operator": null
+          },
+          {
+            "key": "share_count",
+            "label": "分享数",
+            "type": "number",
+            "field_type": 2,
+            "source": "share_count",
+            "operator": null
+          },
+          {
+            "key": "unique_id",
+            "label": "唯一ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "unique_id",
+            "operator": null
+          },
+          {
+            "key": "video_url",
+            "label": "视频链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "video_url",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "count": 30
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "video_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "duration",
+        "extract_douyin_sec_user_id",
+        "timestamp"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "array_to_value_objects",
+    "duration",
+    "extract_douyin_sec_user_id",
+    "timestamp"
+  ]
+}

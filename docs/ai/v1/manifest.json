@@ -1,0 +1,142 @@
+{
+  "schema_version": "collect4big-manifest.v1",
+  "release_id": "0c57c58a81e2ba03",
+  "minimum_runtime_version": "1.0.0",
+  "platforms": [
+    {
+      "id": "wechat_video",
+      "name": "微信视频号",
+      "description": "微信视频号数据采集",
+      "function_count": 4,
+      "bundle_url": "./platforms/wechat_video.json",
+      "bundle_sha256": "9719a9e7c8e6a498dcba4a1421806261768e158549f0c619f027e28197d3e1d9",
+      "guide_url": "./guides/wechat_video.md"
+    },
+    {
+      "id": "wechat_mp",
+      "name": "微信公众号",
+      "description": "微信公众号文章与账号发文采集",
+      "function_count": 2,
+      "bundle_url": "./platforms/wechat_mp.json",
+      "bundle_sha256": "0ff900ec141ad40512807695c7aee54afc6844e313e9cc6ae99e2ade2047d8fa",
+      "guide_url": "./guides/wechat_mp.md"
+    },
+    {
+      "id": "xiaohongshu",
+      "name": "小红书",
+      "description": "小红书数据采集",
+      "function_count": 2,
+      "bundle_url": "./platforms/xiaohongshu.json",
+      "bundle_sha256": "dfbcf9e66c62bb099c34bb50c58af87433f3910fb35229648285f5eb6affc8cb",
+      "guide_url": "./guides/xiaohongshu.md"
+    },
+    {
+      "id": "zhihu",
+      "name": "知乎",
+      "description": "知乎热榜数据采集",
+      "function_count": 1,
+      "bundle_url": "./platforms/zhihu.json",
+      "bundle_sha256": "56bcb6d1a543aba9f6f04c227f43d061d6fe227250514c05889c3714d6069dc8",
+      "guide_url": "./guides/zhihu.md"
+    },
+    {
+      "id": "bilibili",
+      "name": "B站",
+      "description": "哔哩哔哩热门视频数据采集",
+      "function_count": 1,
+      "bundle_url": "./platforms/bilibili.json",
+      "bundle_sha256": "8a0f969b0d906061f4fd21efb712680fad54eefb05eba7f8fc9cddd1b509c5be",
+      "guide_url": "./guides/bilibili.md"
+    },
+    {
+      "id": "weibo",
+      "name": "微博",
+      "description": "微博热搜榜数据采集",
+      "function_count": 1,
+      "bundle_url": "./platforms/weibo.json",
+      "bundle_sha256": "0e1934a822d13110f2179c88e9dad0c1656a606dde08c70b932d84946035fd45",
+      "guide_url": "./guides/weibo.md"
+    },
+    {
+      "id": "douyin",
+      "name": "抖音",
+      "description": "抖音数据采集",
+      "function_count": 2,
+      "bundle_url": "./platforms/douyin.json",
+      "bundle_sha256": "36fde6c76095576613ebbc6ddb7928d1e410fa3e06cdcfd79826fee19ad1140c",
+      "guide_url": "./guides/douyin.md"
+    },
+    {
+      "id": "jd",
+      "name": "京东",
+      "description": "京东商品采集",
+      "function_count": 3,
+      "bundle_url": "./platforms/jd.json",
+      "bundle_sha256": "9ce7c046c4f6337f4f61d36c3d9178670641c8599a07c72a048efd9fd73fc6b6",
+      "guide_url": "./guides/jd.md"
+    },
+    {
+      "id": "alibaba1688",
+      "name": "1688",
+      "description": "1688商品采集",
+      "function_count": 4,
+      "bundle_url": "./platforms/alibaba1688.json",
+      "bundle_sha256": "217198deeb07469a158244f5f0cc071bd3777231a99a79748af173bc6e739c73",
+      "guide_url": "./guides/alibaba1688.md"
+    },
+    {
+      "id": "taobao",
+      "name": "淘宝",
+      "description": "淘宝商品搜索与详情采集",
+      "function_count": 6,
+      "bundle_url": "./platforms/taobao.json",
+      "bundle_sha256": "d657c35d395cb2591d1b44b34a0a9cbbe502abe7b81e2ba741bab0aa5afad81c",
+      "guide_url": "./guides/taobao.md"
+    },
+    {
+      "id": "instagram",
+      "name": "Instagram",
+      "description": "Instagram 内容与话题采集",
+      "function_count": 4,
+      "bundle_url": "./platforms/instagram.json",
+      "bundle_sha256": "d8f02c6218584f655420e8b90e7189c94739081a32bebd1d9a6e7e1cded7ad5f",
+      "guide_url": "./guides/instagram.md"
+    },
+    {
+      "id": "reddit",
+      "name": "Reddit",
+      "description": "Reddit 帖子与热门搜索采集",
+      "function_count": 2,
+      "bundle_url": "./platforms/reddit.json",
+      "bundle_sha256": "39e14e79551ebfc91f2f69b4e8d46c50ba6b810a1dbd8fd52d9a6d216737678c",
+      "guide_url": "./guides/reddit.md"
+    },
+    {
+      "id": "twitter",
+      "name": "Twitter",
+      "description": "Twitter 推文与账号内容采集",
+      "function_count": 3,
+      "bundle_url": "./platforms/twitter.json",
+      "bundle_sha256": "2146933e0c1029c183bdb55ac2fb0cc3bda264fa545a98b8f8b18b4ab2ea1892",
+      "guide_url": "./guides/twitter.md"
+    },
+    {
+      "id": "tiktok_shop",
+      "name": "TikTok Shop",
+      "description": "TikTok Shop 海外商品采集",
+      "function_count": 3,
+      "bundle_url": "./platforms/tiktok_shop.json",
+      "bundle_sha256": "b27333f9cefc9e9a4404a9181677c5f4786280eff1cb2efcb3eacf7a167ecfc7",
+      "guide_url": "./guides/tiktok_shop.md"
+    },
+    {
+      "id": "tools",
+      "name": "通用工具",
+      "description": "通用数据处理工具",
+      "function_count": 1,
+      "bundle_url": "./platforms/tools.json",
+      "bundle_sha256": "aa8fee3b99142ef1907f8e0f8c7ff4a7aaa6acc9b5e3d7a44c962a1787a3cf70",
+      "guide_url": "./guides/tools.md"
+    }
+  ]
+}

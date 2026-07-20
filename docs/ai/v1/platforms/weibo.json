@@ -1,0 +1,117 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "weibo",
+    "name": "微博",
+    "icon": "💬",
+    "description": "微博热搜榜数据采集",
+    "category_id": "domestic_media",
+    "category_name": "国内社媒与流媒体"
+  },
+  "capabilities": {
+    "hot_list": {
+      "capability_id": "weibo.hot_list",
+      "function_id": "hot_list",
+      "name": "热榜",
+      "description": "获取平台热榜/热搜榜数据",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": false,
+        "fields": []
+      },
+      "collection": {
+        "endpoint_path": "/tools/weibo/fetch_hot_search_summary",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.data",
+        "pagination": null,
+        "estimate_per_page": 50,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "微博热榜",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "rank",
+            "label": "排名",
+            "type": "number",
+            "field_type": 2,
+            "source": "rank",
+            "operator": null
+          },
+          {
+            "key": "is_top",
+            "label": "置顶",
+            "type": "text",
+            "field_type": 1,
+            "source": "is_top",
+            "operator": null
+          },
+          {
+            "key": "keyword",
+            "label": "关键词",
+            "type": "text",
+            "field_type": 1,
+            "source": "keyword",
+            "operator": null
+          },
+          {
+            "key": "keyword_url",
+            "label": "话题链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "keyword_url",
+            "operator": "weibo_keyword_url"
+          },
+          {
+            "key": "tag",
+            "label": "标签",
+            "type": "text",
+            "field_type": 1,
+            "source": "tag",
+            "operator": null
+          },
+          {
+            "key": "heat",
+            "label": "热度",
+            "type": "text",
+            "field_type": 1,
+            "source": "heat",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "keyword",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "weibo_keyword_url"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "weibo_keyword_url"
+  ]
+}

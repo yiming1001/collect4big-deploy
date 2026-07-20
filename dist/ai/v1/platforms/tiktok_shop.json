@@ -1,0 +1,693 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "tiktok_shop",
+    "name": "TikTok Shop",
+    "icon": "🛍️",
+    "description": "TikTok Shop 海外商品采集",
+    "category_id": "overseas_ecommerce",
+    "category_name": "海外电商"
+  },
+  "capabilities": {
+    "tiktok_shop_product_search": {
+      "capability_id": "tiktok_shop.tiktok_shop_product_search",
+      "function_id": "tiktok_shop_product_search",
+      "name": "商品搜索",
+      "description": "搜索 TikTok Shop 商品",
+      "icon": "🔎",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "search_word",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入商品搜索关键词",
+            "required": true
+          },
+          {
+            "key": "region",
+            "label": "地区",
+            "type": "select",
+            "default": "US",
+            "required": true,
+            "options": [
+              {
+                "label": "美国",
+                "value": "US"
+              },
+              {
+                "label": "英国",
+                "value": "GB"
+              },
+              {
+                "label": "新加坡",
+                "value": "SG"
+              },
+              {
+                "label": "马来西亚",
+                "value": "MY"
+              },
+              {
+                "label": "菲律宾",
+                "value": "PH"
+              },
+              {
+                "label": "泰国",
+                "value": "TH"
+              },
+              {
+                "label": "越南",
+                "value": "VN"
+              },
+              {
+                "label": "印度尼西亚",
+                "value": "ID"
+              }
+            ]
+          },
+          {
+            "key": "offset",
+            "label": "起始偏移量",
+            "type": "number",
+            "default": 0,
+            "min": 0
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/tiktok_shop/fetch_search_products_list_v2",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "search_word",
+          "region",
+          "offset",
+          "page_token"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "page_token"
+        ],
+        "request_meta": {
+          "search_keyword": "search_word"
+        },
+        "response_meta": {},
+        "data_path": "data.data.component_data.products",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "page_token",
+          "initial_value": "",
+          "response_path": "data.data.component_data.load_more_params.page_token",
+          "has_more_path": "data.data.component_data.has_more",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "TikTok Shop商品搜索",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "product_id",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "brand",
+            "label": "品牌",
+            "type": "text",
+            "field_type": 1,
+            "source": "brand_info.brand_name",
+            "operator": null
+          },
+          {
+            "key": "shop_name",
+            "label": "店铺",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.shop_name",
+            "operator": null
+          },
+          {
+            "key": "seller_id",
+            "label": "店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.seller_id",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "售价",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.sale_price_format",
+            "operator": null
+          },
+          {
+            "key": "currency",
+            "label": "币种",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.currency_name",
+            "operator": null
+          },
+          {
+            "key": "sold_count",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sold_info.sold_count",
+            "operator": null
+          },
+          {
+            "key": "rating",
+            "label": "评分",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.score",
+            "operator": null
+          },
+          {
+            "key": "review_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.review_count",
+            "operator": null
+          },
+          {
+            "key": "image_url",
+            "label": "商品主图",
+            "type": "url",
+            "field_type": 15,
+            "source": "image.url_list.0",
+            "operator": null
+          },
+          {
+            "key": "product_url",
+            "label": "商品链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "seo_url.canonical_url",
+            "operator": null
+          },
+          {
+            "key": "search_keyword",
+            "label": "采集关键词",
+            "type": "text",
+            "field_type": 1,
+            "source": "search_keyword",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "region": "US",
+          "offset": 0
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "product_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "tiktok_shop_seller_products": {
+      "capability_id": "tiktok_shop.tiktok_shop_seller_products",
+      "function_id": "tiktok_shop_seller_products",
+      "name": "店铺商品",
+      "description": "采集 TikTok Shop 商家商品",
+      "icon": "🏪",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "seller_id",
+            "label": "TikTok Shop 店铺ID",
+            "type": "input",
+            "placeholder": "请输入店铺 ID",
+            "required": true
+          },
+          {
+            "key": "region",
+            "label": "地区",
+            "type": "select",
+            "default": "US",
+            "required": true,
+            "options": [
+              {
+                "label": "美国",
+                "value": "US"
+              },
+              {
+                "label": "英国",
+                "value": "GB"
+              },
+              {
+                "label": "新加坡",
+                "value": "SG"
+              },
+              {
+                "label": "马来西亚",
+                "value": "MY"
+              },
+              {
+                "label": "菲律宾",
+                "value": "PH"
+              },
+              {
+                "label": "泰国",
+                "value": "TH"
+              },
+              {
+                "label": "越南",
+                "value": "VN"
+              },
+              {
+                "label": "印度尼西亚",
+                "value": "ID"
+              }
+            ]
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/tiktok_shop/fetch_seller_products_list",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "seller_id",
+          "region",
+          "search_params"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "search_params"
+        ],
+        "request_meta": {
+          "source_seller_id": "seller_id"
+        },
+        "response_meta": {},
+        "data_path": "data.data.products",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "search_params",
+          "initial_value": "",
+          "response_path": "data.data.load_more_params.search_params",
+          "has_more_path": "data.data.has_more",
+          "response_params": {}
+        },
+        "estimate_per_page": 30,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "TikTok Shop店铺商品",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "product_id",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "brand",
+            "label": "品牌",
+            "type": "text",
+            "field_type": 1,
+            "source": "brand_info.brand_name",
+            "operator": null
+          },
+          {
+            "key": "shop_name",
+            "label": "店铺",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.shop_name",
+            "operator": null
+          },
+          {
+            "key": "seller_id",
+            "label": "店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.seller_id",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "售价",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.sale_price_format",
+            "operator": null
+          },
+          {
+            "key": "currency",
+            "label": "币种",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.currency_name",
+            "operator": null
+          },
+          {
+            "key": "sold_count",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sold_info.sold_count",
+            "operator": null
+          },
+          {
+            "key": "rating",
+            "label": "评分",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.score",
+            "operator": null
+          },
+          {
+            "key": "review_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.review_count",
+            "operator": null
+          },
+          {
+            "key": "image_url",
+            "label": "商品主图",
+            "type": "url",
+            "field_type": 15,
+            "source": "image.url_list.0",
+            "operator": null
+          },
+          {
+            "key": "product_url",
+            "label": "商品链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "seo_url.canonical_url",
+            "operator": null
+          },
+          {
+            "key": "source_seller_id",
+            "label": "采集店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "source_seller_id",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "region": "US"
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "product_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "tiktok_shop_product_detail": {
+      "capability_id": "tiktok_shop.tiktok_shop_product_detail",
+      "function_id": "tiktok_shop_product_detail",
+      "name": "商品详情",
+      "description": "按商品 ID 获取 TikTok Shop 商品详情",
+      "icon": "📦",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "product_id",
+            "label": "TikTok Shop 商品ID",
+            "type": "input",
+            "placeholder": "请输入商品 ID",
+            "required": true
+          },
+          {
+            "key": "seller_id",
+            "label": "店铺ID",
+            "type": "input",
+            "placeholder": "可选，用于辅助定位商品"
+          },
+          {
+            "key": "region",
+            "label": "地区",
+            "type": "select",
+            "default": "US",
+            "required": true,
+            "options": [
+              {
+                "label": "美国",
+                "value": "US"
+              },
+              {
+                "label": "英国",
+                "value": "GB"
+              },
+              {
+                "label": "新加坡",
+                "value": "SG"
+              },
+              {
+                "label": "马来西亚",
+                "value": "MY"
+              },
+              {
+                "label": "菲律宾",
+                "value": "PH"
+              },
+              {
+                "label": "泰国",
+                "value": "TH"
+              },
+              {
+                "label": "越南",
+                "value": "VN"
+              },
+              {
+                "label": "印度尼西亚",
+                "value": "ID"
+              }
+            ]
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/tiktok_shop/fetch_product_detail",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "product_id",
+          "seller_id",
+          "region"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "seller_id"
+        ],
+        "request_meta": {
+          "requested_product_id": "product_id",
+          "requested_seller_id": "seller_id"
+        },
+        "response_meta": {},
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": "extract_tiktok_detail_products"
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "TikTok Shop商品详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "product_id",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品名称",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "brand",
+            "label": "品牌",
+            "type": "text",
+            "field_type": 1,
+            "source": "brand_info.brand_name",
+            "operator": null
+          },
+          {
+            "key": "shop_name",
+            "label": "店铺",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.shop_name",
+            "operator": null
+          },
+          {
+            "key": "seller_id",
+            "label": "店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_info.seller_id",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "售价",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.sale_price_format",
+            "operator": null
+          },
+          {
+            "key": "currency",
+            "label": "币种",
+            "type": "text",
+            "field_type": 1,
+            "source": "product_price_info.currency_name",
+            "operator": null
+          },
+          {
+            "key": "sold_count",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sold_info.sold_count",
+            "operator": null
+          },
+          {
+            "key": "rating",
+            "label": "评分",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.score",
+            "operator": null
+          },
+          {
+            "key": "review_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "rate_info.review_count",
+            "operator": null
+          },
+          {
+            "key": "image_url",
+            "label": "商品主图",
+            "type": "url",
+            "field_type": 15,
+            "source": "image.url_list.0",
+            "operator": null
+          },
+          {
+            "key": "product_url",
+            "label": "商品链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "seo_url.canonical_url",
+            "operator": null
+          },
+          {
+            "key": "requested_product_id",
+            "label": "请求商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "requested_product_id",
+            "operator": null
+          },
+          {
+            "key": "requested_seller_id",
+            "label": "请求店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "requested_seller_id",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "region": "US"
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "product_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "extract_tiktok_detail_products"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "extract_tiktok_detail_products"
+  ]
+}

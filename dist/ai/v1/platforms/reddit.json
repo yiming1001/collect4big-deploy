@@ -1,0 +1,301 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "reddit",
+    "name": "Reddit",
+    "icon": "🟠",
+    "description": "Reddit 帖子与热门搜索采集",
+    "category_id": "overseas_media",
+    "category_name": "海外社媒与流媒体"
+  },
+  "capabilities": {
+    "reddit_post_detail": {
+      "capability_id": "reddit.reddit_post_detail",
+      "function_id": "reddit_post_detail",
+      "name": "帖子详情",
+      "description": "按帖子 ID 获取 Reddit 帖子详情",
+      "icon": "📄",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "Reddit 帖子ID",
+            "type": "input",
+            "placeholder": "例如 t3_1ojnh50",
+            "required": true
+          },
+          {
+            "key": "include_comment_id",
+            "label": "定位特定评论",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "key": "comment_id",
+            "label": "评论ID",
+            "type": "input",
+            "placeholder": "仅定位特定评论时填写"
+          },
+          {
+            "key": "need_format",
+            "label": "启用上游清洗",
+            "type": "boolean",
+            "default": false
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/reddit/fetch_post_details",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "post_id",
+          "include_comment_id",
+          "comment_id",
+          "need_format"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "comment_id"
+        ],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.postsInfoByIds",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Reddit帖子详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "post_id",
+            "label": "帖子ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "postTitle",
+            "operator": null
+          },
+          {
+            "key": "author_name",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": "authorInfo.name",
+            "operator": null
+          },
+          {
+            "key": "subreddit",
+            "label": "社区",
+            "type": "text",
+            "field_type": 1,
+            "source": "subreddit.prefixedName",
+            "operator": null
+          },
+          {
+            "key": "flair",
+            "label": "标签",
+            "type": "text",
+            "field_type": 1,
+            "source": "flair.text",
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "text",
+            "field_type": 1,
+            "source": "createdAt",
+            "operator": null
+          },
+          {
+            "key": "score",
+            "label": "评分",
+            "type": "number",
+            "field_type": 2,
+            "source": "score",
+            "operator": null
+          },
+          {
+            "key": "comment_count",
+            "label": "评论数",
+            "type": "number",
+            "field_type": 2,
+            "source": "commentCount",
+            "operator": null
+          },
+          {
+            "key": "upvote_ratio",
+            "label": "好评率",
+            "type": "number",
+            "field_type": 2,
+            "source": "upvoteRatio",
+            "operator": null
+          },
+          {
+            "key": "share_count",
+            "label": "分享数",
+            "type": "number",
+            "field_type": 2,
+            "source": "postStats.shareAllTotal",
+            "operator": null
+          },
+          {
+            "key": "is_nsfw",
+            "label": "成人内容",
+            "type": "text",
+            "field_type": 1,
+            "source": "isNsfw",
+            "operator": null
+          },
+          {
+            "key": "post_url",
+            "label": "帖子链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "permalink",
+            "operator": "reddit_permalink_url"
+          },
+          {
+            "key": "outbound_url",
+            "label": "原始链接",
+            "type": "url",
+            "field_type": 15,
+            "source": "url",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "include_comment_id": false,
+          "need_format": false
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "post_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "reddit_permalink_url"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "reddit_trending_searches": {
+      "capability_id": "reddit.reddit_trending_searches",
+      "function_id": "reddit_trending_searches",
+      "name": "热门搜索",
+      "description": "获取 Reddit 热门搜索词",
+      "icon": "🔥",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "need_format",
+            "label": "启用上游清洗",
+            "type": "boolean",
+            "default": false
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/reddit/fetch_trending_searches",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "need_format"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.trendingQueries",
+        "pagination": null,
+        "estimate_per_page": 20,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Reddit热门搜索",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "trend_id",
+            "label": "热词ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "id",
+            "operator": null
+          },
+          {
+            "key": "display_query",
+            "label": "展示热词",
+            "type": "text",
+            "field_type": 1,
+            "source": "displayQuery",
+            "operator": null
+          },
+          {
+            "key": "raw_query",
+            "label": "原始查询词",
+            "type": "text",
+            "field_type": 1,
+            "source": "rawQuery",
+            "operator": null
+          },
+          {
+            "key": "trending_icon",
+            "label": "趋势标记",
+            "type": "text",
+            "field_type": 1,
+            "source": "trendingIcon",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "need_format": false
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "trend_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "reddit_permalink_url"
+  ]
+}

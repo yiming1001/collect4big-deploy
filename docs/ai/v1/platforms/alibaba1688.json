@@ -1,0 +1,920 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "alibaba1688",
+    "name": "1688",
+    "icon": "🏷️",
+    "description": "1688商品采集",
+    "category_id": "domestic_ecommerce",
+    "category_name": "国内电商"
+  },
+  "capabilities": {
+    "item_get_1688": {
+      "capability_id": "alibaba1688.item_get_1688",
+      "function_id": "item_get_1688",
+      "name": "商品详情",
+      "description": "按商品ID获取1688商品详情，自动写入商品主表+SKU表",
+      "icon": "📦",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "num_iid",
+            "label": "商品ID(num_iid)",
+            "type": "input",
+            "placeholder": "请输入1688商品ID，例如 601824709263",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/1688/item_get",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "num_iid"
+        ],
+        "string_params": [
+          "num_iid"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {},
+        "response_meta": {},
+        "data_path": "data.item",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "1688商品详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_iid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "商品现价",
+            "type": "number",
+            "field_type": 2,
+            "source": "price",
+            "operator": null
+          },
+          {
+            "key": "original_price",
+            "label": "商品原价",
+            "type": "number",
+            "field_type": 2,
+            "source": "orginal_price",
+            "operator": null
+          },
+          {
+            "key": "stock_total",
+            "label": "商品库存",
+            "type": "number",
+            "field_type": 2,
+            "source": "num",
+            "operator": null
+          },
+          {
+            "key": "main_image",
+            "label": "商品主图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic_url",
+            "operator": null
+          },
+          {
+            "key": "detail_url",
+            "label": "商品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_url",
+            "operator": null
+          },
+          {
+            "key": "detail_images_text",
+            "label": "详情图",
+            "type": "text",
+            "field_type": 1,
+            "source": "desc_img",
+            "operator": "join_array_cn"
+          },
+          {
+            "key": "params_text",
+            "label": "商品参数文本",
+            "type": "text",
+            "field_type": 1,
+            "source": "props",
+            "operator": "name_value_pairs_text"
+          }
+        ],
+        "multi_table_mode": "product_sku"
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "num_lid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "join_array_cn",
+        "name_value_pairs_text"
+      ],
+      "runtime_support": {
+        "supported": false,
+        "reason": "multi_table_mode=product_sku is not supported by runtime v1"
+      }
+    },
+    "item_search_1688": {
+      "capability_id": "alibaba1688.item_search_1688",
+      "function_id": "item_search_1688",
+      "name": "商品搜索",
+      "description": "按关键词搜索1688商品列表",
+      "icon": "🔎",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "q",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入关键词，例如 女装",
+            "required": true
+          },
+          {
+            "key": "start_price",
+            "label": "最低价(可选)",
+            "type": "number",
+            "default": ""
+          },
+          {
+            "key": "end_price",
+            "label": "最高价(可选)",
+            "type": "number",
+            "default": ""
+          },
+          {
+            "key": "cat",
+            "label": "类目ID(可选)",
+            "type": "input",
+            "default": ""
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "default": 40
+          },
+          {
+            "key": "sort",
+            "label": "排序(可选)",
+            "type": "input",
+            "default": "",
+            "placeholder": "bid/_bid/_sale/_credit"
+          },
+          {
+            "key": "filter",
+            "label": "过滤参数(可选)",
+            "type": "input",
+            "default": ""
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/1688/item_search",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "q",
+          "start_price",
+          "end_price",
+          "page",
+          "cat",
+          "sort",
+          "page_size",
+          "filter"
+        ],
+        "string_params": [
+          "q",
+          "start_price",
+          "end_price",
+          "page",
+          "cat",
+          "sort",
+          "page_size",
+          "filter"
+        ],
+        "omit_empty_params": [
+          "start_price",
+          "end_price",
+          "cat",
+          "sort",
+          "filter"
+        ],
+        "request_meta": {
+          "search_keyword": "q"
+        },
+        "response_meta": {
+          "page": [
+            "data.items.page",
+            "items.page"
+          ],
+          "page_size": [
+            "data.items.page_size",
+            "items.page_size"
+          ],
+          "page_count": [
+            "data.items.page_count",
+            "items.page_count",
+            "data.items.pagecount",
+            "items.pagecount"
+          ],
+          "total_results": [
+            "data.items.total_results",
+            "items.total_results"
+          ],
+          "real_total_results": [
+            "data.items.real_total_results",
+            "items.real_total_results"
+          ]
+        },
+        "data_path": [
+          "data.items.item",
+          "items.item"
+        ],
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 40,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "1688商品搜索",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "search_keyword",
+            "label": "搜索词",
+            "type": "text",
+            "field_type": 1,
+            "source": "search_keyword",
+            "operator": null
+          },
+          {
+            "key": "page",
+            "label": "页码",
+            "type": "number",
+            "field_type": 2,
+            "source": "page",
+            "operator": null
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_size",
+            "operator": null
+          },
+          {
+            "key": "page_count",
+            "label": "总页数",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_count",
+            "operator": null
+          },
+          {
+            "key": "total_results",
+            "label": "结果总数",
+            "type": "number",
+            "field_type": 2,
+            "source": "total_results",
+            "operator": null
+          },
+          {
+            "key": "real_total_results",
+            "label": "真实结果总数",
+            "type": "number",
+            "field_type": 2,
+            "source": "real_total_results",
+            "operator": null
+          },
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_iid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "商品现价",
+            "type": "number",
+            "field_type": 2,
+            "source": "price",
+            "operator": null
+          },
+          {
+            "key": "promotion_price",
+            "label": "促销价",
+            "type": "number",
+            "field_type": 2,
+            "source": "promotion_price",
+            "operator": null
+          },
+          {
+            "key": "sales",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sales",
+            "operator": null
+          },
+          {
+            "key": "tag_percent",
+            "label": "标签占比",
+            "type": "text",
+            "field_type": 1,
+            "source": "tag_percent",
+            "operator": null
+          },
+          {
+            "key": "pic_url",
+            "label": "商品主图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic_url",
+            "operator": null
+          },
+          {
+            "key": "detail_url",
+            "label": "商品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_url",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "start_price": "",
+          "end_price": "",
+          "cat": "",
+          "page_size": 40,
+          "sort": "",
+          "filter": ""
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "num_lid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "item_search_shop_1688": {
+      "capability_id": "alibaba1688.item_search_shop_1688",
+      "function_id": "item_search_shop_1688",
+      "name": "店铺商品",
+      "description": "按店铺ID/卖家ID获取1688店铺商品",
+      "icon": "🏪",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "shop_id",
+            "label": "店铺ID(shop_id)",
+            "type": "input",
+            "placeholder": "请输入店铺ID",
+            "required": true
+          },
+          {
+            "key": "seller_id",
+            "label": "卖家ID(seller_id)",
+            "type": "input",
+            "placeholder": "请输入卖家ID",
+            "required": true
+          },
+          {
+            "key": "sort",
+            "label": "排序(可选)",
+            "type": "input",
+            "default": ""
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/1688/item_search_shop",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "shop_id",
+          "seller_id",
+          "page",
+          "sort"
+        ],
+        "string_params": [
+          "shop_id",
+          "seller_id",
+          "page",
+          "sort"
+        ],
+        "omit_empty_params": [
+          "sort"
+        ],
+        "request_meta": {
+          "query_shop_id": "shop_id",
+          "query_seller_id": "seller_id"
+        },
+        "response_meta": {
+          "shop_id": [
+            "data.items.shop_id",
+            "items.shop_id"
+          ],
+          "page": [
+            "data.items.page",
+            "items.page"
+          ],
+          "page_size": [
+            "data.items.page_size",
+            "items.page_size"
+          ],
+          "page_count": [
+            "data.items.page_count",
+            "items.page_count"
+          ],
+          "total_results": [
+            "data.items.total_results",
+            "items.total_results"
+          ],
+          "real_total_results": [
+            "data.items.real_total_results",
+            "items.real_total_results"
+          ]
+        },
+        "data_path": [
+          "data.items.item",
+          "items.item"
+        ],
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "1688店铺商品",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "query_shop_id",
+            "label": "查询店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "query_shop_id",
+            "operator": null
+          },
+          {
+            "key": "query_seller_id",
+            "label": "查询卖家ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "query_seller_id",
+            "operator": null
+          },
+          {
+            "key": "shop_id",
+            "label": "店铺ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "shop_id",
+            "operator": null
+          },
+          {
+            "key": "page",
+            "label": "页码",
+            "type": "number",
+            "field_type": 2,
+            "source": "page",
+            "operator": null
+          },
+          {
+            "key": "page_size",
+            "label": "每页数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_size",
+            "operator": null
+          },
+          {
+            "key": "page_count",
+            "label": "总页数",
+            "type": "number",
+            "field_type": 2,
+            "source": "page_count",
+            "operator": null
+          },
+          {
+            "key": "total_results",
+            "label": "结果总数",
+            "type": "number",
+            "field_type": 2,
+            "source": "total_results",
+            "operator": null
+          },
+          {
+            "key": "real_total_results",
+            "label": "真实结果总数",
+            "type": "number",
+            "field_type": 2,
+            "source": "real_total_results",
+            "operator": null
+          },
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_iid",
+            "operator": null
+          },
+          {
+            "key": "title",
+            "label": "商品标题",
+            "type": "text",
+            "field_type": 1,
+            "source": "title",
+            "operator": null
+          },
+          {
+            "key": "price",
+            "label": "商品现价",
+            "type": "number",
+            "field_type": 2,
+            "source": "price",
+            "operator": null
+          },
+          {
+            "key": "promotion_price",
+            "label": "促销价",
+            "type": "number",
+            "field_type": 2,
+            "source": "promotion_price",
+            "operator": null
+          },
+          {
+            "key": "sales",
+            "label": "销量",
+            "type": "number",
+            "field_type": 2,
+            "source": "sales",
+            "operator": null
+          },
+          {
+            "key": "seller_id",
+            "label": "卖家ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "seller_id",
+            "operator": null
+          },
+          {
+            "key": "shop_item_id",
+            "label": "店铺ID(商品)",
+            "type": "text",
+            "field_type": 1,
+            "source": "shop_id",
+            "operator": null
+          },
+          {
+            "key": "pic_url",
+            "label": "商品主图",
+            "type": "text",
+            "field_type": 1,
+            "source": "pic_url",
+            "operator": null
+          },
+          {
+            "key": "detail_url",
+            "label": "商品链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "detail_url",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "sort": ""
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "num_lid",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "item_review_1688": {
+      "capability_id": "alibaba1688.item_review_1688",
+      "function_id": "item_review_1688",
+      "name": "商品评论",
+      "description": "采集1688商品评论数据",
+      "icon": "🗨️",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "num_iid",
+            "label": "商品ID(num_iid)",
+            "type": "input",
+            "placeholder": "请输入商品ID，例如 612398037607",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/1688/item_review",
+        "request_method": "GET",
+        "request_payload_mode": "query",
+        "params": [
+          "num_iid",
+          "page"
+        ],
+        "string_params": [
+          "num_iid",
+          "page"
+        ],
+        "omit_empty_params": [],
+        "request_meta": {
+          "num_lid": "num_iid"
+        },
+        "response_meta": {
+          "total_results": [
+            "data.items.total_results",
+            "items.total_results"
+          ],
+          "rate_average": [
+            "data.items.rate_average",
+            "items.rate_average"
+          ],
+          "good_percent": [
+            "data.items.good_percent",
+            "items.good_percent"
+          ],
+          "review_detail_url": [
+            "data.items.detail_url",
+            "items.detail_url"
+          ]
+        },
+        "data_path": [
+          "data.items.item",
+          "items.item"
+        ],
+        "pagination": {
+          "type": "page",
+          "param_name": "page",
+          "start_page": 1,
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "1688商品评论",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "num_lid",
+            "label": "商品ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "num_lid",
+            "operator": null
+          },
+          {
+            "key": "review_unique_key",
+            "label": "评论唯一键",
+            "type": "text",
+            "field_type": 1,
+            "source": null,
+            "operator": "alibaba_review_unique_key"
+          },
+          {
+            "key": "total_results",
+            "label": "总评论数",
+            "type": "text",
+            "field_type": 1,
+            "source": "total_results",
+            "operator": null
+          },
+          {
+            "key": "rate_average",
+            "label": "评分均值",
+            "type": "text",
+            "field_type": 1,
+            "source": "rate_average",
+            "operator": null
+          },
+          {
+            "key": "good_percent",
+            "label": "好评率",
+            "type": "text",
+            "field_type": 1,
+            "source": "good_percent",
+            "operator": null
+          },
+          {
+            "key": "review_detail_url",
+            "label": "评论页链接",
+            "type": "text",
+            "field_type": 1,
+            "source": "review_detail_url",
+            "operator": null
+          },
+          {
+            "key": "content",
+            "label": "评论内容",
+            "type": "text",
+            "field_type": 1,
+            "source": "content",
+            "operator": null
+          },
+          {
+            "key": "explanation",
+            "label": "追评内容",
+            "type": "text",
+            "field_type": 1,
+            "source": "explanation",
+            "operator": "default:"
+          },
+          {
+            "key": "gmt_published",
+            "label": "评论时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "gmtPublished",
+            "operator": null
+          },
+          {
+            "key": "gmt_explanation",
+            "label": "追评时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "gmtExplanation",
+            "operator": null
+          },
+          {
+            "key": "rater_user_nick",
+            "label": "用户昵称",
+            "type": "text",
+            "field_type": 1,
+            "source": "raterUserNick",
+            "operator": null
+          },
+          {
+            "key": "spec_info",
+            "label": "规格信息",
+            "type": "text",
+            "field_type": 1,
+            "source": "specInfo",
+            "operator": null
+          },
+          {
+            "key": "quantity",
+            "label": "购买数量",
+            "type": "number",
+            "field_type": 2,
+            "source": "quantity",
+            "operator": null
+          },
+          {
+            "key": "unit",
+            "label": "单位",
+            "type": "text",
+            "field_type": 1,
+            "source": "unit",
+            "operator": null
+          },
+          {
+            "key": "star_level",
+            "label": "星级",
+            "type": "number",
+            "field_type": 2,
+            "source": "starLevel",
+            "operator": null
+          },
+          {
+            "key": "is_system_remark",
+            "label": "是否系统评价",
+            "type": "text",
+            "field_type": 1,
+            "source": "isSystemRemark",
+            "operator": null
+          },
+          {
+            "key": "is_taobao_member",
+            "label": "淘宝会员",
+            "type": "text",
+            "field_type": 1,
+            "source": "isTaobaoMember",
+            "operator": null
+          },
+          {
+            "key": "level_img",
+            "label": "等级图标",
+            "type": "text",
+            "field_type": 1,
+            "source": "levelImg",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "review_unique_key",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "alibaba_review_unique_key",
+        "default"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "alibaba_review_unique_key",
+    "default",
+    "join_array_cn",
+    "name_value_pairs_text"
+  ]
+}

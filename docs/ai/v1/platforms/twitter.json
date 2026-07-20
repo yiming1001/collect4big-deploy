@@ -1,0 +1,682 @@
+{
+  "schema_version": "collect4big-platform.v1",
+  "minimum_runtime_version": "1.0.0",
+  "tool_api_base": "https://i-sync.cn/api/v1",
+  "platform": {
+    "id": "twitter",
+    "name": "Twitter",
+    "icon": "X",
+    "description": "Twitter 推文与账号内容采集",
+    "category_id": "overseas_media",
+    "category_name": "海外社媒与流媒体"
+  },
+  "capabilities": {
+    "twitter_post_search": {
+      "capability_id": "twitter.twitter_post_search",
+      "function_id": "twitter_post_search",
+      "name": "搜索推文",
+      "description": "按关键词搜索 Twitter 推文",
+      "icon": "🔎",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "keyword",
+            "label": "搜索关键词",
+            "type": "input",
+            "placeholder": "请输入 Twitter 搜索关键词",
+            "required": true
+          },
+          {
+            "key": "search_type",
+            "label": "搜索类型",
+            "type": "select",
+            "default": "Top",
+            "options": [
+              {
+                "label": "热门",
+                "value": "Top"
+              },
+              {
+                "label": "最新",
+                "value": "Latest"
+              },
+              {
+                "label": "媒体",
+                "value": "Media"
+              },
+              {
+                "label": "用户",
+                "value": "People"
+              },
+              {
+                "label": "列表",
+                "value": "Lists"
+              }
+            ]
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/twitter/fetch_search_timeline",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "keyword",
+          "search_type",
+          "cursor"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "cursor"
+        ],
+        "request_meta": {
+          "search_keyword": "keyword"
+        },
+        "response_meta": {},
+        "data_path": "data.timeline",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "cursor",
+          "initial_value": "",
+          "response_path": "data.next_cursor",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Twitter搜索推文",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "tweet_id",
+            "label": "推文ID",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": null
+          },
+          {
+            "key": "text",
+            "label": "正文",
+            "type": "text",
+            "field_type": 1,
+            "source": "text",
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.name",
+              "user_info.name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "screen_name",
+            "label": "用户名",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.screen_name",
+              "screen_name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "created_at",
+            "operator": "iso_timestamp"
+          },
+          {
+            "key": "language",
+            "label": "语言",
+            "type": "text",
+            "field_type": 1,
+            "source": "lang",
+            "operator": null
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "likes",
+              "favorites"
+            ],
+            "operator": null
+          },
+          {
+            "key": "reply_count",
+            "label": "回复数",
+            "type": "number",
+            "field_type": 2,
+            "source": "replies",
+            "operator": null
+          },
+          {
+            "key": "retweet_count",
+            "label": "转推数",
+            "type": "number",
+            "field_type": 2,
+            "source": "retweets",
+            "operator": null
+          },
+          {
+            "key": "quote_count",
+            "label": "引用数",
+            "type": "number",
+            "field_type": 2,
+            "source": "quotes",
+            "operator": null
+          },
+          {
+            "key": "bookmark_count",
+            "label": "书签数",
+            "type": "number",
+            "field_type": 2,
+            "source": "bookmarks",
+            "operator": null
+          },
+          {
+            "key": "view_count",
+            "label": "浏览数",
+            "type": "number",
+            "field_type": 2,
+            "source": "views",
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "首张媒体",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "entities.media.0.media_url_https",
+              "media.photo.0.media_url_https"
+            ],
+            "operator": null
+          },
+          {
+            "key": "tweet_url",
+            "label": "推文链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": "twitter_tweet_url"
+          },
+          {
+            "key": "search_keyword",
+            "label": "采集关键词",
+            "type": "text",
+            "field_type": 1,
+            "source": "search_keyword",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {
+          "search_type": "Top"
+        },
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "tweet_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "iso_timestamp",
+        "twitter_tweet_url"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "twitter_user_posts": {
+      "capability_id": "twitter.twitter_user_posts",
+      "function_id": "twitter_user_posts",
+      "name": "用户推文",
+      "description": "采集 Twitter 用户发布的推文",
+      "icon": "📝",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "screen_name",
+            "label": "Twitter 用户名",
+            "type": "input",
+            "placeholder": "用户名与用户 ID 二选一"
+          },
+          {
+            "key": "rest_id",
+            "label": "Twitter 用户ID",
+            "type": "input",
+            "placeholder": "用户名与用户 ID 二选一"
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/twitter/fetch_user_post_tweet",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "screen_name",
+          "rest_id",
+          "cursor"
+        ],
+        "string_params": [],
+        "omit_empty_params": [
+          "screen_name",
+          "rest_id",
+          "cursor"
+        ],
+        "request_meta": {
+          "source_account": "screen_name"
+        },
+        "response_meta": {},
+        "data_path": "data.timeline",
+        "pagination": {
+          "type": "cursor",
+          "param_name": "cursor",
+          "initial_value": "",
+          "response_path": "data.next_cursor",
+          "response_params": {}
+        },
+        "estimate_per_page": 20,
+        "allow_collect_all": true,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Twitter用户推文",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "tweet_id",
+            "label": "推文ID",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": null
+          },
+          {
+            "key": "text",
+            "label": "正文",
+            "type": "text",
+            "field_type": 1,
+            "source": "text",
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.name",
+              "user_info.name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "screen_name",
+            "label": "用户名",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.screen_name",
+              "screen_name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "created_at",
+            "operator": "iso_timestamp"
+          },
+          {
+            "key": "language",
+            "label": "语言",
+            "type": "text",
+            "field_type": 1,
+            "source": "lang",
+            "operator": null
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "likes",
+              "favorites"
+            ],
+            "operator": null
+          },
+          {
+            "key": "reply_count",
+            "label": "回复数",
+            "type": "number",
+            "field_type": 2,
+            "source": "replies",
+            "operator": null
+          },
+          {
+            "key": "retweet_count",
+            "label": "转推数",
+            "type": "number",
+            "field_type": 2,
+            "source": "retweets",
+            "operator": null
+          },
+          {
+            "key": "quote_count",
+            "label": "引用数",
+            "type": "number",
+            "field_type": 2,
+            "source": "quotes",
+            "operator": null
+          },
+          {
+            "key": "bookmark_count",
+            "label": "书签数",
+            "type": "number",
+            "field_type": 2,
+            "source": "bookmarks",
+            "operator": null
+          },
+          {
+            "key": "view_count",
+            "label": "浏览数",
+            "type": "number",
+            "field_type": 2,
+            "source": "views",
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "首张媒体",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "entities.media.0.media_url_https",
+              "media.photo.0.media_url_https"
+            ],
+            "operator": null
+          },
+          {
+            "key": "tweet_url",
+            "label": "推文链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": "twitter_tweet_url"
+          },
+          {
+            "key": "source_account",
+            "label": "采集账号",
+            "type": "text",
+            "field_type": 1,
+            "source": "source_account",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "tweet_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "iso_timestamp",
+        "twitter_tweet_url"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    },
+    "twitter_tweet_detail": {
+      "capability_id": "twitter.twitter_tweet_detail",
+      "function_id": "twitter_tweet_detail",
+      "name": "推文详情",
+      "description": "按推文 ID 获取 Twitter 推文详情",
+      "icon": "📄",
+      "input_schema": {
+        "show_collect_settings": true,
+        "fields": [
+          {
+            "key": "tweet_id",
+            "label": "Twitter 推文ID",
+            "type": "input",
+            "placeholder": "请输入 Twitter 推文 ID",
+            "required": true
+          }
+        ]
+      },
+      "collection": {
+        "endpoint_path": "/tools/twitter/fetch_tweet_detail",
+        "request_method": "POST",
+        "request_payload_mode": "json",
+        "params": [
+          "tweet_id"
+        ],
+        "string_params": [],
+        "omit_empty_params": [],
+        "request_meta": {
+          "requested_tweet_id": "tweet_id"
+        },
+        "response_meta": {},
+        "data_path": "data",
+        "pagination": null,
+        "estimate_per_page": 1,
+        "allow_collect_all": false,
+        "param_operator": null,
+        "extract_operator": null
+      },
+      "output": {
+        "target": "personal_bitable",
+        "table_name": "Twitter推文详情",
+        "ensure_table": true,
+        "ensure_fields": true,
+        "fields": [
+          {
+            "key": "tweet_id",
+            "label": "推文ID",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": null
+          },
+          {
+            "key": "text",
+            "label": "正文",
+            "type": "text",
+            "field_type": 1,
+            "source": "text",
+            "operator": null
+          },
+          {
+            "key": "author",
+            "label": "作者",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.name",
+              "user_info.name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "screen_name",
+            "label": "用户名",
+            "type": "text",
+            "field_type": 1,
+            "source": [
+              "author.screen_name",
+              "screen_name"
+            ],
+            "operator": null
+          },
+          {
+            "key": "published_at",
+            "label": "发布时间",
+            "type": "datetime",
+            "field_type": 5,
+            "source": "created_at",
+            "operator": "iso_timestamp"
+          },
+          {
+            "key": "language",
+            "label": "语言",
+            "type": "text",
+            "field_type": 1,
+            "source": "lang",
+            "operator": null
+          },
+          {
+            "key": "like_count",
+            "label": "点赞数",
+            "type": "number",
+            "field_type": 2,
+            "source": [
+              "likes",
+              "favorites"
+            ],
+            "operator": null
+          },
+          {
+            "key": "reply_count",
+            "label": "回复数",
+            "type": "number",
+            "field_type": 2,
+            "source": "replies",
+            "operator": null
+          },
+          {
+            "key": "retweet_count",
+            "label": "转推数",
+            "type": "number",
+            "field_type": 2,
+            "source": "retweets",
+            "operator": null
+          },
+          {
+            "key": "quote_count",
+            "label": "引用数",
+            "type": "number",
+            "field_type": 2,
+            "source": "quotes",
+            "operator": null
+          },
+          {
+            "key": "bookmark_count",
+            "label": "书签数",
+            "type": "number",
+            "field_type": 2,
+            "source": "bookmarks",
+            "operator": null
+          },
+          {
+            "key": "view_count",
+            "label": "浏览数",
+            "type": "number",
+            "field_type": 2,
+            "source": "views",
+            "operator": null
+          },
+          {
+            "key": "cover_url",
+            "label": "首张媒体",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "entities.media.0.media_url_https",
+              "media.photo.0.media_url_https"
+            ],
+            "operator": null
+          },
+          {
+            "key": "tweet_url",
+            "label": "推文链接",
+            "type": "url",
+            "field_type": 15,
+            "source": [
+              "tweet_id",
+              "id"
+            ],
+            "operator": "twitter_tweet_url"
+          },
+          {
+            "key": "requested_tweet_id",
+            "label": "请求推文ID",
+            "type": "text",
+            "field_type": 1,
+            "source": "requested_tweet_id",
+            "operator": null
+          }
+        ],
+        "multi_table_mode": null
+      },
+      "defaults": {
+        "form_data": {},
+        "collect_mode": "times",
+        "collect_times": 1,
+        "deduplication_enabled": true,
+        "deduplication_field": "tweet_id",
+        "deduplication_strategy": "keepOld"
+      },
+      "required_operators": [
+        "iso_timestamp",
+        "twitter_tweet_url"
+      ],
+      "runtime_support": {
+        "supported": true,
+        "reason": null
+      }
+    }
+  },
+  "required_operators": [
+    "iso_timestamp",
+    "twitter_tweet_url"
+  ]
+}
